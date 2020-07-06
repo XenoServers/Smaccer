@@ -1,31 +1,34 @@
 name: Smaccer
 author: Xenophilicy
-version: 1.0.0
+version: 1.1.0
 description: A massive combination of Slapper and all its add-on plugins
 main: Xenophilicy\Smaccer\Smaccer
 api: 3.13.0
 mcpe-protocol: [361, 388, 389, 390, 407]
 
 permissions:
+  slapperplus.command:
+    default: op
+    description: Allows access to /slapperplus
   slapper:
     default: op
     description: Allow access to all Smaccer commands
     children:
       slapper.create:
+        default: op
         description: Allow using command /slapper create
-        default: op
       slapper.edit:
+        default: op
         description: Allow editing Slapper entity data with /slapper edit
-        default: op
       slapper.rca:
+        default: op
         description: Allow running commands as other players
-        default: op
       slapper.remove:
+        default: op
         description: Allow removing Slapper entities with /slapper remove [id]
-        default: op
       slapper.id:
+        default: op
         description: Allow viewing entity ID
-        default: op
       slapper.help:
-        description: Allow viewing Slapper help page
         default: op
+        description: Allow viewing Slapper help page
