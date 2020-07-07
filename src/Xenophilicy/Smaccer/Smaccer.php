@@ -12,6 +12,7 @@ use pocketmine\event\entity\EntitySpawnEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\network\mcpe\protocol\AnimatePacket;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat as TF;
@@ -71,10 +72,26 @@ class Smaccer extends PluginBase implements Listener {
         $cmd->registerSubSlapper("cancel", new CancelSlapper(), ["stopremove", "stopid", "stop"]);
         $cmd->registerSubSlapper("spawn", new SpawnSlapper(), ["add", "make", "create", "spawn", "apawn", "spanw", "new"]);
         self::$enabled = $this->getConfig()->getAll();
+        if(self::$enabled["SlapBack"]) $this->getLogger()->info("Enabled SlapBack");
         if(self::$enabled["SlapperPlus"]){
             $this->getLogger()->info("Enabled SlapperPlus");
             $this->getServer()->getCommandMap()->register("slapperplus", new SlapperPlus());
         }
+    }
+    
+    /**
+     * @param SlapperHitEvent $ev
+     */
+    public function onSlapperHit(SlapperHitEvent $ev){
+        if(!self::$enabled["SlapBack"]) return;
+        $entity = $ev->getEntity();
+        if(!$entity instanceof SlapperHuman){
+            return;
+        }
+        $pk = new AnimatePacket();
+        $pk->entityRuntimeId = $entity->getId();
+        $pk->action = AnimatePacket::ACTION_SWING_ARM;
+        $ev->getDamager()->dataPacket($pk);
     }
     
     /**
