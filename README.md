@@ -8,4 +8,6 @@ A massive combination of [Slapper](https://github.com/jojoe77777/Slapper) and al
 - [X] [SlapperRotation](https://github.com/jojoe77777/SlapperRotation)
 - [ ] [SlapperCache](https://github.com/jojoe77777/SlapperCache)
 - [X] [SlapperPlus](https://github.com/jojoe77777/SlapperPlus)
-- [ ] [SlapperCooldown](https://github.com/jojoe77777/SlapperCooldown)
+- [X] [SlapperCooldown](https://github.com/jojoe77777/SlapperCooldown)
+- [ ] [SlapperPlayerCount](https://github.com/ethaniccc/SlapperPlayerCount)
+- [ ]

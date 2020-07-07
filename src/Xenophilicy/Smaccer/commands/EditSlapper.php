@@ -32,17 +32,16 @@ class EditSlapper extends SubSlapper {
             $sender->sendMessage(Smaccer::PREFIX . TF::RED . "You don't have permission to edit Slappers");
             return false;
         }
-        if(!$sender instanceof Player){
-            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "You can only edit Slappers in-game");
-            return false;
-        }
         $eid = array_shift($args);
         if(is_null($eid)){
             $sender->sendMessage(Smaccer::PREFIX . TF::RED . "Usage: /slapper edit <eid> <mode> [args]");
             return false;
         }
-        $level = $sender->getLevel();
-        $entity = $level->getEntity((int)$eid);
+        $entity = null;
+        foreach(Smaccer::getInstance()->getServer()->getLevels() as $level){
+            $entity = $level->getEntity((int)$eid);
+            if($entity instanceof Entity) break;
+        }
         if($entity === null){
             $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That entity doesn't exist");
             return false;
@@ -59,8 +58,8 @@ class EditSlapper extends SubSlapper {
         switch($mode){
             case "armor":
             case "clothes":
-                if(!$entity instanceof SlapperHuman){
-                    $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That entity can't wear armor");
+                if(!$sender instanceof Player){
+                    $sender->sendMessage(Smaccer::PREFIX . TF::RED . "You can only edit that in-game");
                     return false;
                 }
                 $entity->getArmorInventory()->setHelmet($sender->getArmorInventory()->getHelmet());
@@ -80,6 +79,10 @@ class EditSlapper extends SubSlapper {
                 }
                 $item = array_shift($args);
                 if(is_null($item)){
+                    if(!$sender instanceof Player){
+                        $sender->sendMessage(Smaccer::PREFIX . TF::RED . "You must provide an item ID");
+                        return false;
+                    }
                     $item = $sender->getArmorInventory()->getHelmet();
                 }else{
                     $data = explode(":", $item);
@@ -98,6 +101,10 @@ class EditSlapper extends SubSlapper {
                 }
                 $item = array_shift($args);
                 if(is_null($item)){
+                    if(!$sender instanceof Player){
+                        $sender->sendMessage(Smaccer::PREFIX . TF::RED . "You must provide an item ID");
+                        return false;
+                    }
                     $item = $sender->getArmorInventory()->getChestplate();
                 }else{
                     $data = explode(":", $item);
@@ -116,6 +123,10 @@ class EditSlapper extends SubSlapper {
                 }
                 $item = array_shift($args);
                 if(is_null($item)){
+                    if(!$sender instanceof Player){
+                        $sender->sendMessage(Smaccer::PREFIX . TF::RED . "You must provide an item ID");
+                        return false;
+                    }
                     $item = $sender->getArmorInventory()->getLeggings();
                 }else{
                     $data = explode(":", $item);
@@ -134,6 +145,10 @@ class EditSlapper extends SubSlapper {
                 }
                 $item = array_shift($args);
                 if(is_null($item)){
+                    if(!$sender instanceof Player){
+                        $sender->sendMessage(Smaccer::PREFIX . TF::RED . "You must provide an item ID");
+                        return false;
+                    }
                     $item = $sender->getArmorInventory()->getBoots();
                 }else{
                     $data = explode(":", $item);
@@ -154,6 +169,10 @@ class EditSlapper extends SubSlapper {
                 }
                 $item = array_shift($args);
                 if(is_null($item)){
+                    if(!$sender instanceof Player){
+                        $sender->sendMessage(Smaccer::PREFIX . TF::RED . "You must provide an item ID");
+                        return false;
+                    }
                     $item = $sender->getInventory()->getItemInHand();
                 }else{
                     $data = explode(":", $item);
@@ -168,6 +187,10 @@ class EditSlapper extends SubSlapper {
             case "changeskin":
             case "editskin";
             case "skin":
+                if(!$sender instanceof Player){
+                    $sender->sendMessage(Smaccer::PREFIX . TF::RED . "You can only edit that in-game");
+                    return false;
+                }
                 if(!$entity instanceof SlapperHuman){
                     $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That entity can't have a skin");
                     return false;
@@ -268,6 +291,10 @@ class EditSlapper extends SubSlapper {
                 }
                 $block = array_shift($args);
                 if(is_null($block)){
+                    if(!$sender instanceof Player){
+                        $sender->sendMessage(Smaccer::PREFIX . TF::RED . "You must provide an item ID");
+                        return false;
+                    }
                     $block = $sender->getInventory()->getItemInHand()->getBlock();
                 }else{
                     $data = explode(":", $block);
@@ -282,6 +309,10 @@ class EditSlapper extends SubSlapper {
             case "tphere":
             case "movehere":
             case "bringhere":
+                if(!$sender instanceof Player){
+                    $sender->sendMessage(Smaccer::PREFIX . TF::RED . "You can only edit that in-game");
+                    return false;
+                }
                 $entity->teleport($sender);
                 $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "Teleported entity to you");
                 $entity->respawnToAll();
@@ -291,6 +322,10 @@ class EditSlapper extends SubSlapper {
             case "goto":
             case "teleport":
             case "tp":
+                if(!$sender instanceof Player){
+                    $sender->sendMessage(Smaccer::PREFIX . TF::RED . "You can only edit that in-game");
+                    return false;
+                }
                 $sender->teleport($entity);
                 $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "Teleported you to entity");
                 return true;
