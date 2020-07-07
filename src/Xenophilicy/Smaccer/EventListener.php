@@ -32,24 +32,41 @@ class EventListener implements Listener {
      * @param SlapperHitEvent $event
      */
     public function onSlapperHit(SlapperHitEvent $event){
-        if(!Smaccer::addonEnabled("SlapBack")) return;
-        $entity = $event->getEntity();
-        if(!$entity instanceof SlapperHuman){
-            return;
+        if(Smaccer::addonEnabled("SlapBack")){
+            $entity = $event->getEntity();
+            if($entity instanceof SlapperHuman){
+                $pk = new AnimatePacket();
+                $pk->entityRuntimeId = $entity->getId();
+                $pk->action = AnimatePacket::ACTION_SWING_ARM;
+                $event->getDamager()->dataPacket($pk);
+            }
         }
-        $pk = new AnimatePacket();
-        $pk->entityRuntimeId = $entity->getId();
-        $pk->action = AnimatePacket::ACTION_SWING_ARM;
-        $event->getDamager()->dataPacket($pk);
+        if(Smaccer::addonEnabled("SlapperCooldown")){
+            $name = $event->getDamager()->getName();
+            if(!isset(Smaccer::getInstance()->lastHit[$name])){
+                Smaccer::getInstance()->lastHit[$name] = microtime(true);
+                return;
+            }
+            if((Smaccer::getInstance()->lastHit[$name] + Smaccer::$settings["SlapperCooldown"]["delay"]) > microtime(true)){
+                $event->setCancelled();
+                $event->getDamager()->sendTip(Smaccer::$settings["SlapperCooldown"]["message"]);
+            }else{
+                Smaccer::getInstance()->lastHit[$name] = microtime(true);
+            }
+        }
     }
     
     /**
      * @param PlayerQuitEvent $event
      */
     public function onPlayerQuit(PlayerQuitEvent $event){
-        if(!Smaccer::addonEnabled("SlapperPlus")) return;
-        unset(Smaccer::getInstance()->entityIds[$event->getPlayer()->getName()]);
-        unset(Smaccer::getInstance()->editingId[$event->getPlayer()->getName()]);
+        if(Smaccer::addonEnabled("SlapperPlus")){
+            unset(Smaccer::getInstance()->entityIds[$event->getPlayer()->getName()]);
+            unset(Smaccer::getInstance()->editingId[$event->getPlayer()->getName()]);
+        }
+        if(Smaccer::addonEnabled("SlapperCooldown")){
+            unset(Smaccer::getInstance()->lastHit[$event->getPlayer()->getName()]);
+        }
     }
     
     /**

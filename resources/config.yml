@@ -11,7 +11,7 @@
 #                                         $$ |                                      /  \__$$ |
 #                                         $$ |                                      $$    $$/
 #                                         $$/                                        $$$$$$/
-VERSION: "1.1.0" # Internal use only
+VERSION: "1.2.0" # Internal use only
 
 # Set these add-ons to true or false to enable or disable their features (respectively)
 
@@ -36,3 +36,7 @@ SlapperPlus:
 # SlapperCooldown limits how fast a Slapper can be hit
 SlapperCooldown:
   enabled: false
+  # Slapper hit cooldown (in seconds)
+  delay: 0.5
+  # This is the message sent when a player attempts to hit a Slapper too quickly
+  message: "§aYou're hitting me too fast!"

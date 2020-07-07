@@ -26,11 +26,15 @@ use Xenophilicy\Smaccer\events\SlapperCreationEvent;
  */
 class Smaccer extends PluginBase implements Listener {
     
+    public const CONFIG_VERSION = "1.2.0";
+    
     public const PREFIX = TF::YELLOW . "[" . TF::GREEN . "Smaccer" . TF::YELLOW . "] ";
     /** @var array */
     public static $settings;
     /** @var Smaccer */
     private static $instance;
+    /** @var array */
+    public $lastHit = [];
     /** @var array */
     public $hitSessions = [];
     /** @var array */
@@ -51,6 +55,13 @@ class Smaccer extends PluginBase implements Listener {
         self::$instance = $this;
         $this->saveDefaultConfig();
         self::$settings = $this->getConfig()->getAll();
+        $configVersion = self::$settings["VERSION"];
+        $pluginVersion = $this->getDescription()->getVersion();
+        if(version_compare(self::CONFIG_VERSION, $configVersion, "gt")){
+            $this->getLogger()->warning("You've updated Smaccer to v" . $pluginVersion . " which requires a config version greater than " . self::CONFIG_VERSION . " but you have a config from v" . $configVersion . "! Please delete your old config for new features to be enabled and to prevent unwanted errors!");
+            $this->getServer()->getPluginManager()->disablePlugin($this);
+            return;
+        }
         $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
         EntityManager::init();
         $this->enableAddons();
@@ -68,6 +79,7 @@ class Smaccer extends PluginBase implements Listener {
     private function enableAddons(){
         if(self::addonEnabled("SlapperRotation")) $this->getLogger()->info("Enabled SlapperRotation");
         if(self::addonEnabled("SlapBack")) $this->getLogger()->info("Enabled SlapBack");
+        if(self::addonEnabled("SlapperCooldown")) $this->getLogger()->info("Enabled SlapperCooldown");
         if(self::addonEnabled("SlapperPlus")){
             $this->getLogger()->info("Enabled SlapperPlus");
             $this->getServer()->getCommandMap()->register("slapperplus", new SlapperPlus());
