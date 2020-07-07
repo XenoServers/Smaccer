@@ -51,6 +51,7 @@ class HelpSlapper extends SubSlapper {
             $sender->sendMessage(self::STAR . "id: /slapper id");
             $sender->sendMessage(self::STAR . "remove: /slapper remove");
             $sender->sendMessage(self::STAR . "cancel: /slapper cancel");
+            $sender->sendMessage(self::STAR . "list: /slapper list [level]");
             $sender->sendMessage(self::STAR . "help: /slapper help [edit]");
         }
         return true;

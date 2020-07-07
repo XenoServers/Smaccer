@@ -19,6 +19,7 @@ use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
 use Xenophilicy\Smaccer\entities\SlapperEntity;
 use Xenophilicy\Smaccer\entities\SlapperHuman;
+use Xenophilicy\Smaccer\events\SlapperCreationEvent;
 use Xenophilicy\Smaccer\events\SlapperHitEvent;
 
 /**
@@ -27,6 +28,16 @@ use Xenophilicy\Smaccer\events\SlapperHitEvent;
  */
 class EventListener implements Listener {
     
+    /**
+     * @param SlapperCreationEvent $ev
+     */
+    public function onSlapperCreation(SlapperCreationEvent $ev){
+        if(!Smaccer::addonEnabled("SlapperCache")) return;
+        if($ev->getCause() !== SlapperCreationEvent::CAUSE_COMMAND) return;
+        $entity = $ev->getEntity();
+        $entity->saveNBT();
+        Smaccer::getInstance()->cacheHandler->storeSlapperNbt($entity->getNameTag(), $entity->getSaveId(), $entity->getLevel()->getName(), $entity->namedtag);
+    }
     
     /**
      * @param SlapperHitEvent $event

@@ -33,7 +33,7 @@ class BaseSlapper extends PluginCommand {
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args){
         if(count($args) === 0 || !array_key_exists($args[0], $this->subCommands)){
-            $sender->sendMessage(TextFormat::RED . "Usage: /slapper <spawn|edit|id|remove|cancel|help>");
+            $sender->sendMessage(TextFormat::RED . "Usage: /slapper <spawn|edit|id|remove|cancel|list|help>");
             return false;
         }
         return $this->subCommands[array_shift($args)]->execute($sender, $commandLabel, $args);
