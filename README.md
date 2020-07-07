@@ -5,7 +5,7 @@ A massive combination of [Slapper](https://github.com/jojoe77777/Slapper) and al
 
 ### Implemented Addons
 - [X] [SlapBack](https://github.com/jojoe77777/SlapBack)
-- [ ] [SlapperRotation](https://github.com/jojoe77777/SlapperRotation)
+- [X] [SlapperRotation](https://github.com/jojoe77777/SlapperRotation)
 - [ ] [SlapperCache](https://github.com/jojoe77777/SlapperCache)
 - [X] [SlapperPlus](https://github.com/jojoe77777/SlapperPlus)
 - [ ] [SlapperCooldown](https://github.com/jojoe77777/SlapperCooldown)

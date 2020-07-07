@@ -11,21 +11,28 @@
 #                                         $$ |                                      /  \__$$ |
 #                                         $$ |                                      $$    $$/
 #                                         $$/                                        $$$$$$/
-VERSION: "1.0.0" # Internal use only
+VERSION: "1.1.0" # Internal use only
 
 # Set these add-ons to true or false to enable or disable their features (respectively)
 
 # SlapBack allows Slappers to hit you back
-SlapBack: false
+SlapBack:
+  enabled: false
 
 # SlapperRotation allows nearby Slappers to look at you
-SlapperRotation: false
+SlapperRotation:
+  enabled: false
+  # This is the maximum distance that a Slapper will target another player
+  max-distance: 16
 
 # SlapperCache allows you to cache or uncache Slappers
-SlapperCache: false
+SlapperCache:
+  enabled: false
 
 # SlapperPlus gives you an easy UI for managing Slappers
-SlapperPlus: false
+SlapperPlus:
+  enabled: false
 
 # SlapperCooldown limits how fast a Slapper can be hit
-SlapperCooldown: false
+SlapperCooldown:
+  enabled: false
