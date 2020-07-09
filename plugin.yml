@@ -32,3 +32,4 @@ permissions:
       smaccer.help:
         default: op
         description: Allow viewing Smaccer help page
+        
