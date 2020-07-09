@@ -7,13 +7,13 @@ use pocketmine\entity\Entity;
 use pocketmine\event\entity\EntityEvent;
 
 /**
- * Class SlapperDeletionEvent
+ * Class SmaccerDeletionEvent
  * @package Xenophilicy\Smaccer\events
  */
-class SlapperDeletionEvent extends EntityEvent {
+class SmaccerDeletionEvent extends EntityEvent {
     
     /**
-     * SlapperDeletionEvent constructor.
+     * SmaccerDeletionEvent constructor.
      * @param Entity $entity
      */
     public function __construct(Entity $entity){

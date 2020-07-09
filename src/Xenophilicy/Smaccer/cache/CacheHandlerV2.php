@@ -17,11 +17,11 @@ use Xenophilicy\Smaccer\Smaccer;
 class CacheHandlerV2 implements CacheReader {
     
     public const DATA_DIR = "cache_v2";
-    public const STATE_FILE = "slappers_restored_file";
+    public const STATE_FILE = "smaccers_restored_file";
     
-    public function storeSlapperNbt(string $nametag, string $type, string $levelName, CompoundTag $nbt): void{
+    public function storeSmaccerNbt(string $nametag, string $type, string $levelName, CompoundTag $nbt): void{
         $pos = $nbt->getListTag("Pos");
-        $nbt->removeTag("SlapperData");
+        $nbt->removeTag("SmaccerData");
         assert($pos instanceof ListTag);
         $dir = $this->getDirectory();
         @mkdir($dir, 0777, true);
@@ -69,12 +69,12 @@ class CacheHandlerV2 implements CacheReader {
     /**
      * @return Generator|CacheObject[]
      */
-    public function uncacheSlappers(): Generator{
+    public function uncacheSmaccers(): Generator{
         $files = glob($this->getDirectory() . "*.nbt");
         $reader = new BigEndianNBTStream();
         foreach($files as $file){
             $fileName = basename($file, ".nbt");
-            Smaccer::getInstance()->getLogger()->debug(__FUNCTION__ . " Found Slapper in v2 format: $fileName");
+            Smaccer::getInstance()->getLogger()->debug(__FUNCTION__ . " Found Smaccer in v2 format: $fileName");
             $data = file_get_contents($file);
             $nbt = $reader->readCompressed($data);
             assert($nbt instanceof CompoundTag);

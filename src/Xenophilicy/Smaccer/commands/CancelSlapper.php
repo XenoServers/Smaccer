@@ -9,10 +9,10 @@ use pocketmine\utils\TextFormat as TF;
 use Xenophilicy\Smaccer\Smaccer;
 
 /**
- * Class CancelSlapper
+ * Class CancelSmaccer
  * @package Xenophilicy\Smaccer\commands
  */
-class CancelSlapper extends SubSlapper {
+class CancelSmaccer extends SubSmaccer {
     
     /**
      * @param CommandSender $sender

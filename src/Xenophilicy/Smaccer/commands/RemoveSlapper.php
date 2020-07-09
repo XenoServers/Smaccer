@@ -6,16 +6,16 @@ namespace Xenophilicy\Smaccer\commands;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
-use Xenophilicy\Smaccer\entities\SlapperEntity;
-use Xenophilicy\Smaccer\entities\SlapperHuman;
-use Xenophilicy\Smaccer\events\SlapperDeletionEvent;
+use Xenophilicy\Smaccer\entities\SmaccerEntity;
+use Xenophilicy\Smaccer\entities\SmaccerHuman;
+use Xenophilicy\Smaccer\events\SmaccerDeletionEvent;
 use Xenophilicy\Smaccer\Smaccer;
 
 /**
- * Class SpawnSlapper
+ * Class SpawnSmaccer
  * @package Xenophilicy\Smaccer\commands
  */
-class RemoveSlapper extends SubSlapper {
+class RemoveSmaccer extends SubSmaccer {
     
     /**
      * @param CommandSender $sender
@@ -24,12 +24,12 @@ class RemoveSlapper extends SubSlapper {
      * @return mixed
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args){
-        if(!$sender->hasPermission("slapper.remove")){
-            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "You don't have permission to spawn Slappers");
+        if(!$sender->hasPermission("smaccer.remove")){
+            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "You don't have permission to spawn Smaccers");
             return false;
         }
         if(!$sender instanceof Player){
-            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "You can only create Slappers in-game");
+            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "You can only create Smaccers in-game");
             return false;
         }
         if(!isset($args[0])){
@@ -42,11 +42,11 @@ class RemoveSlapper extends SubSlapper {
             $sender->sendMessage(Smaccer::PREFIX . TF::RED . "Entity does not exist");
             return false;
         }
-        if(!$entity instanceof SlapperEntity && !$entity instanceof SlapperHuman){
-            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That entity is not handled by Slapper");
+        if(!$entity instanceof SmaccerEntity && !$entity instanceof SmaccerHuman){
+            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That entity is not handled by Smaccer");
             return false;
         }
-        $event = new SlapperDeletionEvent($entity);
+        $event = new SmaccerDeletionEvent($entity);
         $event->call();
         $entity->close();
         $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "Entity removed");

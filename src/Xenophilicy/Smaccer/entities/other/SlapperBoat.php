@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace Xenophilicy\Smaccer\entities\other;
 
-use Xenophilicy\Smaccer\entities\SlapperEntity;
+use Xenophilicy\Smaccer\entities\SmaccerEntity;
 
 /**
- * Class SlapperBoat
+ * Class SmaccerBoat
  * @package Xenophilicy\Smaccer\entities\other
  */
-class SlapperBoat extends SlapperEntity {
+class SmaccerBoat extends SmaccerEntity {
     
     const TYPE_ID = 90;
     const HEIGHT = 0.6;

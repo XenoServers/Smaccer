@@ -9,16 +9,16 @@ use pocketmine\event\entity\EntityEvent;
 use pocketmine\Player;
 
 /**
- * Class SlapperHitEvent
+ * Class SmaccerHitEvent
  * @package Xenophilicy\Smaccer\events
  */
-class SlapperHitEvent extends EntityEvent implements Cancellable {
+class SmaccerHitEvent extends EntityEvent implements Cancellable {
     
     /** @var Player */
     private $damager;
     
     /**
-     * SlapperHitEvent constructor.
+     * SmaccerHitEvent constructor.
      * @param Entity $entity
      * @param Player $damager
      */

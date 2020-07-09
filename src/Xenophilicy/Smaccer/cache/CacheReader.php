@@ -7,7 +7,7 @@ use Generator;
 
 /**
  * Interface CacheReader
- * @package SlapperCache
+ * @package SmaccerCache
  */
 interface CacheReader {
     
@@ -22,5 +22,5 @@ interface CacheReader {
     /**
      * @return Generator|CacheObject[]
      */
-    public function uncacheSlappers(): Generator;
+    public function uncacheSmaccers(): Generator;
 }

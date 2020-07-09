@@ -11,9 +11,9 @@ use pocketmine\network\mcpe\protocol\SetActorDataPacket as SetEntityDataPacket;
 use pocketmine\Player;
 
 /**
- * Trait containing methods used in various Slappers.
+ * Trait containing methods used in various Smaccers.
  */
-trait SlapperTrait {
+trait SmaccerTrait {
     /** @var CompoundTag */
     public $namedtag;
     
@@ -59,7 +59,7 @@ trait SlapperTrait {
     
     abstract public function sendNameTag(Player $player): void;
     
-    public function saveSlapperNbt(): void{
+    public function saveSmaccerNbt(): void{
         $visibility = 0;
         if($this->isNameTagVisible()){
             $visibility = 1;

@@ -8,10 +8,10 @@ use pocketmine\event\entity\EntityEvent;
 use pocketmine\Player;
 
 /**
- * Class SlapperCreationEvent
+ * Class SmaccerCreationEvent
  * @package Xenophilicy\Smaccer\events
  */
-class SlapperCreationEvent extends EntityEvent {
+class SmaccerCreationEvent extends EntityEvent {
     
     const CAUSE_COMMAND = 0;
     

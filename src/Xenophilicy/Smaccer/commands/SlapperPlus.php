@@ -8,25 +8,25 @@ use pocketmine\command\PluginCommand;
 use pocketmine\entity\Entity;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
-use Xenophilicy\Smaccer\entities\SlapperEntity;
-use Xenophilicy\Smaccer\entities\SlapperHuman;
+use Xenophilicy\Smaccer\entities\SmaccerEntity;
+use Xenophilicy\Smaccer\entities\SmaccerHuman;
 use Xenophilicy\Smaccer\EntityManager;
 use Xenophilicy\Smaccer\libs\jojoe77777\FormAPI\CustomForm;
 use Xenophilicy\Smaccer\libs\jojoe77777\FormAPI\SimpleForm;
 use Xenophilicy\Smaccer\Smaccer;
 
 /**
- * Class SlapperPlus
+ * Class SmaccerPlus
  * @package Xenophilicy\Smaccer\commands
  */
-class SlapperPlus extends PluginCommand {
+class SmaccerPlus extends PluginCommand {
     
     const IMAGE_URL = "https://raw.githubusercontent.com/jojoe77777/vanilla-textures/mob-heads/{name}.png";
     
     public function __construct(){
-        parent::__construct("slapperplus", Smaccer::getInstance());
-        $this->setPermission("slapperplus.command");
-        $this->setDescription("Manage Slapper entities with a UI");
+        parent::__construct("smaccerplus", Smaccer::getInstance());
+        $this->setPermission("smaccerplus.command");
+        $this->setDescription("Manage Smaccer entities with a UI");
     }
     
     /**
@@ -37,12 +37,12 @@ class SlapperPlus extends PluginCommand {
      * @return mixed
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args){
-        if(!$sender->hasPermission("slapperplus.command")){
-            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "You don't have permission to manage Slappers");
+        if(!$sender->hasPermission("smaccerplus.command")){
+            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "You don't have permission to manage Smaccers");
             return false;
         }
         if(!$sender instanceof Player){
-            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "You can only manage Slappers in-game");
+            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "You can only manage Smaccers in-game");
             return false;
         }
         $this->createMenu($sender);
@@ -60,23 +60,23 @@ class SlapperPlus extends PluginCommand {
             }
             switch($selection){
                 case 0:
-                    $this->createSlapperList($player);
+                    $this->createSmaccerList($player);
                     break;
                 case 1:
-                    $this->createSlapperCreationForm($player);
+                    $this->createSmaccerCreationForm($player);
                     break;
             }
         });
         $form->setTitle(TF::DARK_BLUE . "Main menu");
-        $form->addButton(TF::GOLD . "Edit Slapper entities");
-        $form->addButton(TF::GOLD . "Create a new Slapper entity");
+        $form->addButton(TF::GOLD . "Edit Smaccer entities");
+        $form->addButton(TF::GOLD . "Create a new Smaccer entity");
         $player->sendForm($form);
     }
     
     /**
      * @param Player $player
      */
-    private function createSlapperList(Player $player){
+    private function createSmaccerList(Player $player){
         $form = new SimpleForm(function(Player $player, $data){
             $selection = $data;
             if($selection === null){
@@ -99,26 +99,26 @@ class SlapperPlus extends PluginCommand {
                 return;
             }
             Smaccer::getInstance()->editingId[$player->getName()] = $eid;
-            $this->createSlapperDesc($player, $entity);
+            $this->createSmaccerDesc($player, $entity);
         });
-        $form->setTitle(TF::GREEN . "All Slappers");
+        $form->setTitle(TF::GREEN . "All Smaccers");
         $form->setContent(TF::LIGHT_PURPLE . "Tap to edit");
         $entityIds = [];
         $i = 0;
         foreach($this->getPlugin()->getServer()->getLevels() as $level){
             foreach($level->getEntities() as $entity){
-                if($entity instanceof SlapperEntity){
+                if($entity instanceof SmaccerEntity){
                     $class = get_class($entity);
                     if(strpos($class, "other") === false){
-                        $entityType = substr(get_class($entity), strlen("Xenophilicy\\Smaccer\\entities\\Slapper"));
+                        $entityType = substr(get_class($entity), strlen("Xenophilicy\\Smaccer\\entities\\Smaccer"));
                     }else{
-                        $entityType = substr(get_class($entity), strlen("Xenophilicy\\Smaccer\\entities\\other\\Slapper"));
+                        $entityType = substr(get_class($entity), strlen("Xenophilicy\\Smaccer\\entities\\other\\Smaccer"));
                     }
-                    $form->addButton($this->formatSlapperEntity($entity, $entityType), 1, $this->getSlapperIcon($entityType));
+                    $form->addButton($this->formatSmaccerEntity($entity, $entityType), 1, $this->getSmaccerIcon($entityType));
                     $entityIds[$i] = $entity->getId();
                     ++$i;
-                }elseif($entity instanceof SlapperHuman){
-                    $form->addButton($this->formatSlapperHuman($entity), 1, $this->getSlapperIcon("Human"));
+                }elseif($entity instanceof SmaccerHuman){
+                    $form->addButton($this->formatSmaccerHuman($entity), 1, $this->getSmaccerIcon("Human"));
                     $entityIds[$i] = $entity->getId();
                     ++$i;
                 }
@@ -132,7 +132,7 @@ class SlapperPlus extends PluginCommand {
      * @param Player $player
      * @param Entity $entity
      */
-    private function createSlapperDesc(Player $player, Entity $entity){
+    private function createSmaccerDesc(Player $player, Entity $entity){
         $form = new CustomForm(function(Player $player, $data){
             if($data === null){
                 return;
@@ -157,7 +157,7 @@ class SlapperPlus extends PluginCommand {
             unset(Smaccer::getInstance()->editingId[$player->getName()]);
         });
         $form->setTitle(TF::DARK_BLUE . "Editing {$this->shortenName($entity->getNameTag())}");
-        if($entity instanceof SlapperEntity) $form->addLabel(TF::LIGHT_PURPLE . "Entity type: {$this->getSlapperType($entity)}");else $form->addLabel(TF::LIGHT_PURPLE . "Entity type: Human");
+        if($entity instanceof SmaccerEntity) $form->addLabel(TF::LIGHT_PURPLE . "Entity type: {$this->getSmaccerType($entity)}");else $form->addLabel(TF::LIGHT_PURPLE . "Entity type: Human");
         $form->addInput(TF::GOLD . "Entity name", "Name", $entity->getNameTag());
         $form->addSlider(TF::GOLD . "Yaw", 0, 360, -1, (int)$entity->getYaw());
         $form->addSlider(TF::GOLD . "Pitch", 0, 180, -1, (int)$entity->getPitch());
@@ -177,19 +177,19 @@ class SlapperPlus extends PluginCommand {
     }
     
     /**
-     * @param SlapperEntity $entity
+     * @param SmaccerEntity $entity
      * @return false|string
      */
-    private function getSlapperType(SlapperEntity $entity){
+    private function getSmaccerType(SmaccerEntity $entity){
         $class = get_class($entity);
         if(strpos($class, "other") === false){
-            return substr(get_class($entity), strlen("Xenophilicy\\Smaccer\\entities\\Slapper"));
+            return substr(get_class($entity), strlen("Xenophilicy\\Smaccer\\entities\\Smaccer"));
         }else{
-            return substr(get_class($entity), strlen("Xenophilicy\\Smaccer\\entities\\other\\Slapper"));
+            return substr(get_class($entity), strlen("Xenophilicy\\Smaccer\\entities\\other\\Smaccer"));
         }
     }
     
-    private function formatSlapperEntity(SlapperEntity $entity, string $type): string{
+    private function formatSmaccerEntity(SmaccerEntity $entity, string $type): string{
         $name = $this->shortenName($entity->getNameTag());
         $pos = round($entity->getX()) . ", " . round($entity->getY()) . ", " . round($entity->getZ()) . ", " . $entity->getLevel()->getName();
         return TF::GOLD . "'" . TF::WHITE . $name . TF::RESET . TF::GOLD . "' " . TF::LIGHT_PURPLE . "(" . $type . ")" . TF::EOL . TF::DARK_BLUE . $pos;
@@ -199,14 +199,14 @@ class SlapperPlus extends PluginCommand {
      * @param $entityType
      * @return string|string[]
      */
-    private function getSlapperIcon($entityType){
+    private function getSmaccerIcon($entityType){
         if($entityType === "Human"){
             return str_replace("{name}", (mt_rand(0, 1) === 0 ? "steve" : "alex"), self::IMAGE_URL);
         }
         return str_replace("{name}", strtolower($entityType), self::IMAGE_URL);
     }
     
-    private function formatSlapperHuman(SlapperHuman $entity): string{
+    private function formatSmaccerHuman(SmaccerHuman $entity): string{
         $name = $this->shortenName($entity->getNameTag());
         $pos = round($entity->getX()) . ", " . round($entity->getY()) . ", " . round($entity->getZ()) . ", " . $entity->getLevel()->getName();
         return TF::GOLD . "'" . TF::WHITE . $name . TF::RESET . TF::GOLD . "' " . TF::LIGHT_PURPLE . "(Human)" . TF::EOL . TF::DARK_BLUE . $pos;
@@ -215,16 +215,16 @@ class SlapperPlus extends PluginCommand {
     /**
      * @param Player $player
      */
-    private function createSlapperCreationForm(Player $player){
+    private function createSmaccerCreationForm(Player $player){
         $form = new CustomForm(function(Player $player, $data){
             if($data === null){
                 return;
             }
             $entityType = $data[0];
             $name = $data[1];
-            Smaccer::getInstance()->makeSlapper($player, $entityType, $name);
+            Smaccer::getInstance()->makeSmaccer($player, $entityType, $name);
         });
-        $form->setTitle(TF::DARK_BLUE . "Create Slapper");
+        $form->setTitle(TF::DARK_BLUE . "Create Smaccer");
         $form->addDropdown(TF::GOLD . "Entity type", EntityManager::ENTITY_TYPES, 0);
         $form->addInput(TF::GOLD . "Name", "Name", $player->getName());
         $player->sendForm($form);

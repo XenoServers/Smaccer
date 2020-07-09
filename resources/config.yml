@@ -15,28 +15,28 @@ VERSION: "1.2.0" # Internal use only
 
 # Set these add-ons to true or false to enable or disable their features (respectively)
 
-# SlapBack allows Slappers to hit you back
+# SlapBack allows Smaccers to hit you back
 SlapBack:
   enabled: false
 
-# SlapperRotation allows nearby Slappers to look at you
-SlapperRotation:
+# SmaccerRotation allows nearby Smaccers to look at you
+SmaccerRotation:
   enabled: false
-  # This is the maximum distance that a Slapper will target another player
+  # This is the maximum distance that a Smaccer will target another player
   max-distance: 16
 
-# SlapperCache allows you to cache or uncache Slappers
-SlapperCache:
+# SmaccerCache allows you to cache or uncache Smaccers
+SmaccerCache:
   enabled: false
 
-# SlapperPlus gives you an easy UI for managing Slappers
-SlapperPlus:
+# SmaccerPlus gives you an easy UI for managing Smaccers
+SmaccerPlus:
   enabled: false
 
-# SlapperCooldown limits how fast a Slapper can be hit
-SlapperCooldown:
+# SmaccerCooldown limits how fast a Smaccer can be hit
+SmaccerCooldown:
   enabled: false
-  # Slapper hit cooldown (in seconds)
+  # Smaccer hit cooldown (in seconds)
   delay: 0.5
-  # This is the message sent when a player attempts to hit a Slapper too quickly
+  # This is the message sent when a player attempts to hit a Smaccer too quickly
   message: "§aYou're hitting me too fast!"

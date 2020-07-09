@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace Xenophilicy\Smaccer\entities;
 
 /**
- * Class SlapperElderGuardian
+ * Class SmaccerElderGuardian
  * @package Xenophilicy\Smaccer\entities
  */
-class SlapperElderGuardian extends SlapperEntity {
+class SmaccerElderGuardian extends SmaccerEntity {
     
     const TYPE_ID = 50;
     const HEIGHT = 1.9975;

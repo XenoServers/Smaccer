@@ -6,10 +6,10 @@ namespace Xenophilicy\Smaccer\commands;
 use pocketmine\command\CommandSender;
 
 /**
- * Class SubSlapper
- * @package Xenophilicy\BaseSlapper\commands
+ * Class SubSmaccer
+ * @package Xenophilicy\BaseSmaccer\commands
  */
-abstract class SubSlapper {
+abstract class SubSmaccer {
     
     /**
      * @param CommandSender $sender

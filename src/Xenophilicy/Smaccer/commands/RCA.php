@@ -10,14 +10,14 @@ use pocketmine\utils\TextFormat as TF;
 use Xenophilicy\Smaccer\Smaccer;
 
 /**
- * Class BaseSlapper
- * @package Xenophilicy\BaseSlapper\commands
+ * Class BaseSmaccer
+ * @package Xenophilicy\BaseSmaccer\commands
  */
 class RCA extends PluginCommand {
     
     public function __construct(){
-        parent::__construct("slapper", Smaccer::getInstance());
-        $this->setPermission("slapper.rca");
+        parent::__construct("smaccer", Smaccer::getInstance());
+        $this->setPermission("smaccer.rca");
         $this->setDescription("Run commands as other players");
     }
     

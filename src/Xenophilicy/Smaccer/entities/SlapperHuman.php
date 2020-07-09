@@ -8,17 +8,17 @@ use pocketmine\level\Level;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\mcpe\protocol\SetActorDataPacket as SetEntityDataPacket;
 use pocketmine\Player;
-use Xenophilicy\Smaccer\SlapperTrait;
+use Xenophilicy\Smaccer\SmaccerTrait;
 
 /**
- * Class SlapperHuman
+ * Class SmaccerHuman
  * @package Xenophilicy\Smaccer\entities
  */
-class SlapperHuman extends Human {
-    use SlapperTrait;
+class SmaccerHuman extends Human {
+    use SmaccerTrait;
     
     /**
-     * SlapperHuman constructor.
+     * SmaccerHuman constructor.
      * @param Level $level
      * @param CompoundTag $nbt
      */
@@ -29,7 +29,7 @@ class SlapperHuman extends Human {
     
     public function saveNBT(): void{
         parent::saveNBT();
-        $this->saveSlapperNbt();
+        $this->saveSmaccerNbt();
     }
     
     public function sendNameTag(Player $player): void{

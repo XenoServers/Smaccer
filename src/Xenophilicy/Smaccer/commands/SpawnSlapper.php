@@ -8,14 +8,14 @@ use pocketmine\entity\Entity;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
 use Xenophilicy\Smaccer\EntityManager;
-use Xenophilicy\Smaccer\events\SlapperCreationEvent;
+use Xenophilicy\Smaccer\events\SmaccerCreationEvent;
 use Xenophilicy\Smaccer\Smaccer;
 
 /**
- * Class SpawnSlapper
+ * Class SpawnSmaccer
  * @package Xenophilicy\Smaccer\commands
  */
-class SpawnSlapper extends SubSlapper {
+class SpawnSmaccer extends SubSmaccer {
     
     /**
      * @param CommandSender $sender
@@ -24,12 +24,12 @@ class SpawnSlapper extends SubSlapper {
      * @return mixed
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args){
-        if(!$sender->hasPermission("slapper.create")){
-            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "You don't have permission to spawn Slappers");
+        if(!$sender->hasPermission("smaccer.create")){
+            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "You don't have permission to spawn Smaccers");
             return false;
         }
         if(!$sender instanceof Player){
-            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "You can only create Slappers in-game");
+            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "You can only create Smaccers in-game");
             return false;
         }
         $type = array_shift($args);
@@ -61,8 +61,8 @@ class SpawnSlapper extends SubSlapper {
             return false;
         }
         $nbt = Smaccer::getInstance()->makeNBT($chosenType, $sender, $name);
-        $entity = Entity::createEntity("Slapper" . $chosenType, $sender->getLevel(), $nbt);
-        $event = new SlapperCreationEvent($entity, "Slapper" . $chosenType, $sender, SlapperCreationEvent::CAUSE_COMMAND);
+        $entity = Entity::createEntity("Smaccer" . $chosenType, $sender->getLevel(), $nbt);
+        $event = new SmaccerCreationEvent($entity, "Smaccer" . $chosenType, $sender, SmaccerCreationEvent::CAUSE_COMMAND);
         $event->call();
         $entity->spawnToAll();
         $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . $chosenType . " entity spawned with name " . TF::WHITE . "'" . TF::BLUE . $name . TF::WHITE . "'" . TF::GREEN . " and entity ID " . TF::BLUE . $entity->getId());

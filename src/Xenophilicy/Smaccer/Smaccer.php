@@ -15,18 +15,18 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat as TF;
 use Xenophilicy\Smaccer\cache\CacheHandlerV1;
 use Xenophilicy\Smaccer\cache\CacheHandlerV2;
-use Xenophilicy\Smaccer\commands\BaseSlapper;
-use Xenophilicy\Smaccer\commands\CancelSlapper;
-use Xenophilicy\Smaccer\commands\EditSlapper;
-use Xenophilicy\Smaccer\commands\HelpSlapper;
-use Xenophilicy\Smaccer\commands\IdSlapper;
-use Xenophilicy\Smaccer\commands\ListSlapper;
+use Xenophilicy\Smaccer\commands\BaseSmaccer;
+use Xenophilicy\Smaccer\commands\CancelSmaccer;
+use Xenophilicy\Smaccer\commands\EditSmaccer;
+use Xenophilicy\Smaccer\commands\HelpSmaccer;
+use Xenophilicy\Smaccer\commands\IdSmaccer;
+use Xenophilicy\Smaccer\commands\ListSmaccer;
 use Xenophilicy\Smaccer\commands\RCA;
-use Xenophilicy\Smaccer\commands\RemoveSlapper;
-use Xenophilicy\Smaccer\commands\SlapperPlus;
-use Xenophilicy\Smaccer\commands\SpawnSlapper;
-use Xenophilicy\Smaccer\entities\SlapperHuman;
-use Xenophilicy\Smaccer\events\SlapperCreationEvent;
+use Xenophilicy\Smaccer\commands\RemoveSmaccer;
+use Xenophilicy\Smaccer\commands\SmaccerPlus;
+use Xenophilicy\Smaccer\commands\SpawnSmaccer;
+use Xenophilicy\Smaccer\entities\SmaccerHuman;
+use Xenophilicy\Smaccer\events\SmaccerCreationEvent;
 
 /**
  * Class Smaccer
@@ -77,41 +77,41 @@ class Smaccer extends PluginBase implements Listener {
         $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
         EntityManager::init();
         $this->enableAddons();
-        $cmd = new BaseSlapper();
-        $this->getServer()->getCommandMap()->register("slapper", $cmd);
+        $cmd = new BaseSmaccer();
+        $this->getServer()->getCommandMap()->register("smaccer", $cmd);
         $this->getServer()->getCommandMap()->register("rca", new RCA());
-        $cmd->registerSubSlapper("help", new HelpSlapper());
-        $cmd->registerSubSlapper("id", new IdSlapper());
-        $cmd->registerSubSlapper("edit", new EditSlapper());
-        $cmd->registerSubSlapper("list", new ListSlapper());
-        $cmd->registerSubSlapper("remove", new RemoveSlapper(), ["delete", "rm", "del"]);
-        $cmd->registerSubSlapper("cancel", new CancelSlapper(), ["stopremove", "stopid", "stop"]);
-        $cmd->registerSubSlapper("spawn", new SpawnSlapper(), ["add", "make", "create", "spawn", "apawn", "spanw", "new"]);
-        if(!Smaccer::addonEnabled("SlapperCache")) return;
+        $cmd->registerSubSmaccer("help", new HelpSmaccer());
+        $cmd->registerSubSmaccer("id", new IdSmaccer());
+        $cmd->registerSubSmaccer("edit", new EditSmaccer());
+        $cmd->registerSubSmaccer("list", new ListSmaccer());
+        $cmd->registerSubSmaccer("remove", new RemoveSmaccer(), ["delete", "rm", "del"]);
+        $cmd->registerSubSmaccer("cancel", new CancelSmaccer(), ["stopremove", "stopid", "stop"]);
+        $cmd->registerSubSmaccer("spawn", new SpawnSmaccer(), ["add", "make", "create", "spawn", "apawn", "spanw", "new"]);
+        if(!Smaccer::addonEnabled("SmaccerCache")) return;
         
     }
     
     private function enableAddons(){
-        if(self::addonEnabled("SlapperCache")){
+        if(self::addonEnabled("SmaccerCache")){
             $this->cacheHandler = new CacheHandlerV2();
             $legacyCacheHandler = new CacheHandlerV1();
             if($legacyCacheHandler->isValid()){
-                foreach($legacyCacheHandler->uncacheSlappers() as $cacheObject){
-                    $this->cacheHandler->storeSlapperNbt($cacheObject->name, $cacheObject->type, $cacheObject->level, $cacheObject->compoundTag);
+                foreach($legacyCacheHandler->uncacheSmaccers() as $cacheObject){
+                    $this->cacheHandler->storeSmaccerNbt($cacheObject->name, $cacheObject->type, $cacheObject->level, $cacheObject->compoundTag);
                 }
                 $this->cacheHandler->setNeedsRestore($legacyCacheHandler->needsRestore());
                 $legacyCacheHandler->nuke();
-                $this->getLogger()->debug("successfully upgraded Slapper storage to v2");
+                $this->getLogger()->debug("successfully upgraded Smaccer storage to v2");
             }
-            $this->checkForSlapperRestore();
-            $this->getLogger()->info("Enabled SlapperCache");
+            $this->checkForSmaccerRestore();
+            $this->getLogger()->info("Enabled SmaccerCache");
         }
-        if(self::addonEnabled("SlapperRotation")) $this->getLogger()->info("Enabled SlapperRotation");
+        if(self::addonEnabled("SmaccerRotation")) $this->getLogger()->info("Enabled SmaccerRotation");
         if(self::addonEnabled("SlapBack")) $this->getLogger()->info("Enabled SlapBack");
-        if(self::addonEnabled("SlapperCooldown")) $this->getLogger()->info("Enabled SlapperCooldown");
-        if(self::addonEnabled("SlapperPlus")){
-            $this->getServer()->getCommandMap()->register("slapperplus", new SlapperPlus());
-            $this->getLogger()->info("Enabled SlapperPlus");
+        if(self::addonEnabled("SmaccerCooldown")) $this->getLogger()->info("Enabled SmaccerCooldown");
+        if(self::addonEnabled("SmaccerPlus")){
+            $this->getServer()->getCommandMap()->register("smaccerplus", new SmaccerPlus());
+            $this->getLogger()->info("Enabled SmaccerPlus");
         }
     }
     
@@ -120,14 +120,14 @@ class Smaccer extends PluginBase implements Listener {
         return false;
     }
     
-    public function checkForSlapperRestore(){
+    public function checkForSmaccerRestore(){
         if(!$this->cacheHandler->needsRestore()) return;
-        $this->uncacheSlappers();
+        $this->uncacheSmaccers();
         $this->cacheHandler->setNeedsRestore(false);
     }
     
-    private function uncacheSlappers(): void{
-        foreach($this->cacheHandler->uncacheSlappers() as $cacheObject){
+    private function uncacheSmaccers(): void{
+        foreach($this->cacheHandler->uncacheSmaccers() as $cacheObject){
             $level = $this->getServer()->getLevelByName($cacheObject->level);
             if($level === null){
                 $this->getLogger()->error(__FUNCTION__ . ": failed to restore $cacheObject->name, type $cacheObject->type, world $cacheObject->level because world is not loaded");
@@ -143,21 +143,21 @@ class Smaccer extends PluginBase implements Listener {
             $entity->setNameTag(str_replace("Â", "", $cacheObject->name));
             $entity->setNameTagAlwaysVisible();
             $entity->setNameTagVisible();
-            if(!$entity instanceof SlapperHuman) continue;
-            $slapperInv = $cacheObject->compoundTag->getCompoundTag("SlapperData");
-            if(!$slapperInv === null) continue;
-            if($slapperInv->hasTag("Armor", ListTag::class)){
+            if(!$entity instanceof SmaccerHuman) continue;
+            $smaccerInv = $cacheObject->compoundTag->getCompoundTag("SmaccerData");
+            if(!$smaccerInv === null) continue;
+            if($smaccerInv->hasTag("Armor", ListTag::class)){
                 $humanArmour = $entity->getArmorInventory();
                 /** @var CompoundTag $itemTag */
-                foreach($slapperInv->getListTag("Armor") ?? [] as $itemTag){
+                foreach($smaccerInv->getListTag("Armor") ?? [] as $itemTag){
                     $humanArmour->setItem($itemTag->getByte("Slot"), Item::nbtDeserialize($itemTag));
                 }
             }
-            if($slapperInv->hasTag("HeldItemIndex", ByteTag::class)){
-                $entity->getInventory()->setHeldItemIndex($slapperInv->getByte("HeldItemIndex"));
+            if($smaccerInv->hasTag("HeldItemIndex", ByteTag::class)){
+                $entity->getInventory()->setHeldItemIndex($smaccerInv->getByte("HeldItemIndex"));
             }
-            if($slapperInv->hasTag("HeldItem", CompoundTag::class)){
-                $entity->getInventory()->setItemInHand(Item::nbtDeserialize($slapperInv->getCompoundTag("HeldItem")));
+            if($smaccerInv->hasTag("HeldItem", CompoundTag::class)){
+                $entity->getInventory()->setItemInHand(Item::nbtDeserialize($smaccerInv->getCompoundTag("HeldItem")));
             }
         }
     }
@@ -167,12 +167,12 @@ class Smaccer extends PluginBase implements Listener {
      * @param int $type
      * @param string $name
      */
-    public function makeSlapper(Player $player, int $type, string $name){
+    public function makeSmaccer(Player $player, int $type, string $name){
         $type = EntityManager::ENTITY_TYPES[$type];
         $nbt = $this->makeNBT($type, $player, $name);
-        $entity = Entity::createEntity("Slapper" . $type, $player->getLevel(), $nbt);
+        $entity = Entity::createEntity("Smaccer" . $type, $player->getLevel(), $nbt);
         $entity->spawnToAll();
-        $event = new SlapperCreationEvent($entity, "Slapper" . $type, $player, SlapperCreationEvent::CAUSE_COMMAND);
+        $event = new SmaccerCreationEvent($entity, "Smaccer" . $type, $player, SmaccerCreationEvent::CAUSE_COMMAND);
         $event->call();
         $entity->spawnToAll();
         $player->sendMessage(self::PREFIX . TF::GREEN . "Created {$type} entity");
@@ -191,7 +191,7 @@ class Smaccer extends PluginBase implements Listener {
         $nbt->setTag(new CompoundTag("Commands", []));
         $nbt->setString("MenuName", "");
         $nbt->setString("CustomName", $name);
-        $nbt->setString("SlapperVersion", $this->getDescription()->getVersion());
+        $nbt->setString("SmaccerVersion", $this->getDescription()->getVersion());
         if($type === "Human"){
             $player->saveNBT();
             $inventoryTag = $player->namedtag->getListTag("Inventory");

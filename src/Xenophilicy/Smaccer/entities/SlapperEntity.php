@@ -15,14 +15,14 @@ use pocketmine\network\mcpe\protocol\RemoveActorPacket;
 use pocketmine\network\mcpe\protocol\SetActorDataPacket as SetEntityDataPacket;
 use pocketmine\Player;
 use pocketmine\utils\UUID;
-use Xenophilicy\Smaccer\SlapperTrait;
+use Xenophilicy\Smaccer\SmaccerTrait;
 
 /**
- * Class SlapperEntity
+ * Class SmaccerEntity
  * @package Xenophilicy\Smaccer\entities
  */
-class SlapperEntity extends Entity {
-    use SlapperTrait;
+class SmaccerEntity extends Entity {
+    use SmaccerTrait;
     
     const TYPE_ID = 0;
     const HEIGHT = 0;
@@ -31,7 +31,7 @@ class SlapperEntity extends Entity {
     private $tagId;
     
     /**
-     * SlapperEntity constructor.
+     * SmaccerEntity constructor.
      * @param Level $level
      * @param CompoundTag $nbt
      */
@@ -46,7 +46,7 @@ class SlapperEntity extends Entity {
     
     public function saveNBT(): void{
         parent::saveNBT();
-        $this->saveSlapperNbt();
+        $this->saveSmaccerNbt();
     }
     
     public function sendNameTag(Player $player): void{

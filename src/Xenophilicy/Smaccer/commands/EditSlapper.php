@@ -10,16 +10,16 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\mcpe\convert\RuntimeBlockMapping;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
-use Xenophilicy\Smaccer\entities\other\SlapperFallingSand;
-use Xenophilicy\Smaccer\entities\SlapperEntity;
-use Xenophilicy\Smaccer\entities\SlapperHuman;
+use Xenophilicy\Smaccer\entities\other\SmaccerFallingSand;
+use Xenophilicy\Smaccer\entities\SmaccerEntity;
+use Xenophilicy\Smaccer\entities\SmaccerHuman;
 use Xenophilicy\Smaccer\Smaccer;
 
 /**
- * Class EditSlapper
+ * Class EditSmaccer
  * @package Xenophilicy\Smaccer\commands
  */
-class EditSlapper extends SubSlapper {
+class EditSmaccer extends SubSmaccer {
     
     /**
      * @param CommandSender $sender
@@ -28,13 +28,13 @@ class EditSlapper extends SubSlapper {
      * @return mixed
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args){
-        if(!$sender->hasPermission("slapper.edit")){
-            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "You don't have permission to edit Slappers");
+        if(!$sender->hasPermission("smaccer.edit")){
+            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "You don't have permission to edit Smaccers");
             return false;
         }
         $eid = array_shift($args);
         if(is_null($eid)){
-            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "Usage: /slapper edit <eid> <mode> [args]");
+            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "Usage: /smaccer edit <eid> <mode> [args]");
             return false;
         }
         $entity = null;
@@ -46,13 +46,13 @@ class EditSlapper extends SubSlapper {
             $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That entity doesn't exist");
             return false;
         }
-        if(!$entity instanceof SlapperEntity && !$entity instanceof SlapperHuman){
-            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That entity isn't handled by Slapper");
+        if(!$entity instanceof SmaccerEntity && !$entity instanceof SmaccerHuman){
+            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That entity isn't handled by Smaccer");
             return false;
         }
         $mode = array_shift($args);
         if(is_null($mode)){
-            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "Usage: /slapper edit <eid> <mode> [args]");
+            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "Usage: /smaccer edit <eid> <mode> [args]");
             return false;
         }
         switch($mode){
@@ -73,7 +73,7 @@ class EditSlapper extends SubSlapper {
             case "head":
             case "hat":
             case "cap":
-                if(!$entity instanceof SlapperHuman){
+                if(!$entity instanceof SmaccerHuman){
                     $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That entity can't wear armor");
                     return false;
                 }
@@ -95,7 +95,7 @@ class EditSlapper extends SubSlapper {
             case "chest":
             case "shirt":
             case "chestplate":
-                if(!$entity instanceof SlapperHuman){
+                if(!$entity instanceof SmaccerHuman){
                     $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That entity can't wear armor");
                     return false;
                 }
@@ -117,7 +117,7 @@ class EditSlapper extends SubSlapper {
             case "pants":
             case "legs":
             case "leggings":
-                if(!$entity instanceof SlapperHuman){
+                if(!$entity instanceof SmaccerHuman){
                     $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That entity can't wear armor");
                     return false;
                 }
@@ -139,7 +139,7 @@ class EditSlapper extends SubSlapper {
             case "feet":
             case "boots":
             case "shoes":
-                if(!$entity instanceof SlapperHuman){
+                if(!$entity instanceof SmaccerHuman){
                     $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That entity can't wear armor");
                     return false;
                 }
@@ -163,7 +163,7 @@ class EditSlapper extends SubSlapper {
             case "holding":
             case "arm":
             case "held":
-                if(!$entity instanceof SlapperHuman){
+                if(!$entity instanceof SmaccerHuman){
                     $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That entity can't hold items");
                     return false;
                 }
@@ -191,7 +191,7 @@ class EditSlapper extends SubSlapper {
                     $sender->sendMessage(Smaccer::PREFIX . TF::RED . "You can only edit that in-game");
                     return false;
                 }
-                if(!$entity instanceof SlapperHuman){
+                if(!$entity instanceof SmaccerHuman){
                     $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That entity can't have a skin");
                     return false;
                 }
@@ -216,7 +216,7 @@ class EditSlapper extends SubSlapper {
             case "listname":
             case "nameonlist":
             case "menuname":
-                if(!$entity instanceof SlapperHuman){
+                if(!$entity instanceof SmaccerHuman){
                     $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That entity can't have menuname");
                     return false;
                 }
@@ -285,7 +285,7 @@ class EditSlapper extends SubSlapper {
             case "tile":
             case "blockid":
             case "tileid":
-                if(!$entity instanceof SlapperFallingSand){
+                if(!$entity instanceof SmaccerFallingSand){
                     $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That entity isn't a block");
                     return false;
                 }
@@ -337,7 +337,7 @@ class EditSlapper extends SubSlapper {
                 $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "Updated scale");
                 return true;
             default:
-                $sender->sendMessage(Smaccer::PREFIX . TF::RED . "Use " . TF::AQUA . "/slapper help edit" . TF::RED . " to view all edit commands");
+                $sender->sendMessage(Smaccer::PREFIX . TF::RED . "Use " . TF::AQUA . "/smaccer help edit" . TF::RED . " to view all edit commands");
                 return false;
         }
     }

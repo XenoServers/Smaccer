@@ -7,19 +7,19 @@ use pocketmine\block\BlockFactory;
 use pocketmine\level\Level;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\IntTag;
-use Xenophilicy\Smaccer\entities\SlapperEntity;
+use Xenophilicy\Smaccer\entities\SmaccerEntity;
 
 /**
- * Class SlapperFallingSand
+ * Class SmaccerFallingSand
  * @package Xenophilicy\Smaccer\entities\other
  */
-class SlapperFallingSand extends SlapperEntity {
+class SmaccerFallingSand extends SmaccerEntity {
     
     const TYPE_ID = 66;
     const HEIGHT = 0.98;
     
     /**
-     * SlapperFallingSand constructor.
+     * SmaccerFallingSand constructor.
      * @param Level $level
      * @param CompoundTag $nbt
      */

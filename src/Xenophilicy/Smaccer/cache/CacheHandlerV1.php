@@ -21,7 +21,7 @@ use Xenophilicy\Smaccer\Smaccer;
 class CacheHandlerV1 implements CacheReader {
     
     /** @var string */
-    private $SlapperStateFile = "slappers_restored_file";
+    private $SmaccerStateFile = "smaccers_restored_file";
     
     /**
      * @return bool
@@ -42,12 +42,12 @@ class CacheHandlerV1 implements CacheReader {
      * @return bool
      */
     public function needsRestore(): bool{
-        $trigger_file = $this->getDirectory() . $this->SlapperStateFile;
+        $trigger_file = $this->getDirectory() . $this->SmaccerStateFile;
         return !is_file($trigger_file);
     }
     
     public function setNeedsRestore(bool $flag): void{
-        $trigger_file = $this->getDirectory() . $this->SlapperStateFile;
+        $trigger_file = $this->getDirectory() . $this->SmaccerStateFile;
         if(!$flag){
             @touch($trigger_file);
         }else{
@@ -62,12 +62,12 @@ class CacheHandlerV1 implements CacheReader {
     /**
      * @return Generator|CacheObject[]
      */
-    public function uncacheSlappers(): Generator{
+    public function uncacheSmaccers(): Generator{
         $files = glob($this->getDirectory() . "*.slp");
         foreach($files as $file){
             $fileName = basename($file, ".slp");
             [$typeToUse, $world, $name,] = explode(".", $fileName);
-            $this->getLogger()->debug(__FUNCTION__ . " Found cached Slapper in v1 format: $fileName");
+            $this->getLogger()->debug(__FUNCTION__ . " Found cached Smaccer in v1 format: $fileName");
             $nbt = $this->convertNbt($file);
             yield new CacheObject($name, $typeToUse, $world, $nbt);
         }
@@ -83,25 +83,25 @@ class CacheHandlerV1 implements CacheReader {
      */
     private function convertNbt($file){
         $fileName = basename($file, ".slp");
-        // like SlapperCreeper.world.Von.d603217a
-        // or   SlapperHuman.world.Von.383d2bb4
+        // like SmaccerCreeper.world.Von.d603217a
+        // or   SmaccerHuman.world.Von.383d2bb4
         $fileParts = explode(".", $fileName);
         $typeToUse = $fileParts[0];
         $world = $fileParts[1];
         $this->getLogger()->debug(__FUNCTION__ . " Processing $fileName, type $typeToUse, world $world");
         if(!$data = file_get_contents($file)){
-            $this->getLogger()->debug(__FUNCTION__ . " Could not open Slapper cache file: " . $file);
+            $this->getLogger()->debug(__FUNCTION__ . " Could not open Smaccer cache file: " . $file);
             return null;
         }
         $nbt = SerializedNbtFixer::fixSerializedCompoundTag(unserialize($data));
         if(file_exists($file . ".inv")){
             $data = file_get_contents($file . ".inv");
             $inventoryArray = unserialize($data);
-            $slapperTag = new CompoundTag("SlapperData");
-            $slapperTag->setTag(new ListTag("Armor", [self::fixSerializedItem($inventoryArray[0])->nbtSerialize(0), self::fixSerializedItem($inventoryArray[1])->nbtSerialize(1), self::fixSerializedItem($inventoryArray[2])->nbtSerialize(2), self::fixSerializedItem($inventoryArray[3])->nbtSerialize(3)]));
-            $slapperTag->setByte("HeldItemIndex", $inventoryArray[4]);
-            $slapperTag->setTag(self::fixSerializedItem($inventoryArray[5])->nbtSerialize(-1, "HeldItem"));
-            $nbt->setTag($slapperTag);
+            $smaccerTag = new CompoundTag("SmaccerData");
+            $smaccerTag->setTag(new ListTag("Armor", [self::fixSerializedItem($inventoryArray[0])->nbtSerialize(0), self::fixSerializedItem($inventoryArray[1])->nbtSerialize(1), self::fixSerializedItem($inventoryArray[2])->nbtSerialize(2), self::fixSerializedItem($inventoryArray[3])->nbtSerialize(3)]));
+            $smaccerTag->setByte("HeldItemIndex", $inventoryArray[4]);
+            $smaccerTag->setTag(self::fixSerializedItem($inventoryArray[5])->nbtSerialize(-1, "HeldItem"));
+            $nbt->setTag($smaccerTag);
         }
         return $nbt;
     }

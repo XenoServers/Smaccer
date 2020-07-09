@@ -9,18 +9,18 @@ use pocketmine\utils\TextFormat;
 use Xenophilicy\Smaccer\Smaccer;
 
 /**
- * Class BaseSlapper
- * @package Xenophilicy\BaseSlapper\commands
+ * Class BaseSmaccer
+ * @package Xenophilicy\BaseSmaccer\commands
  */
-class BaseSlapper extends PluginCommand {
+class BaseSmaccer extends PluginCommand {
     
-    /** @var  SubSlapper[] */
+    /** @var  SubSmaccer[] */
     protected $subCommands;
     
     public function __construct(){
-        parent::__construct("slapper", Smaccer::getInstance());
-        $this->setPermission("slapper");
-        $this->setDescription("Slapper management command");
+        parent::__construct("smaccer", Smaccer::getInstance());
+        $this->setPermission("smaccer");
+        $this->setDescription("Smaccer management command");
         $this->subCommands = [];
     }
     
@@ -33,7 +33,7 @@ class BaseSlapper extends PluginCommand {
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args){
         if(count($args) === 0 || !array_key_exists($args[0], $this->subCommands)){
-            $sender->sendMessage(TextFormat::RED . "Usage: /slapper <spawn|edit|id|remove|cancel|list|help>");
+            $sender->sendMessage(TextFormat::RED . "Usage: /smaccer <spawn|edit|id|remove|cancel|list|help>");
             return false;
         }
         return $this->subCommands[array_shift($args)]->execute($sender, $commandLabel, $args);
@@ -41,14 +41,14 @@ class BaseSlapper extends PluginCommand {
     
     /**
      * @param string $name
-     * @param SubSlapper $command
+     * @param SubSmaccer $command
      * @param array $aliases
      */
-    public function registerSubSlapper(string $name, SubSlapper $command, $aliases = []){
+    public function registerSubSmaccer(string $name, SubSmaccer $command, $aliases = []){
         $this->subCommands[$name] = $command;
         foreach($aliases as $alias){
             if(!isset($this->subCommands[$alias])){
-                $this->registerSubSlapper($alias, $command);
+                $this->registerSubSmaccer($alias, $command);
             }
         }
     }

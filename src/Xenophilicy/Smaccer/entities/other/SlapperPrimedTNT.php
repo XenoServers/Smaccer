@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace Xenophilicy\Smaccer\entities\other;
 
-use Xenophilicy\Smaccer\entities\SlapperEntity;
+use Xenophilicy\Smaccer\entities\SmaccerEntity;
 
 /**
- * Class SlapperPrimedTNT
+ * Class SmaccerPrimedTNT
  * @package Xenophilicy\Smaccer\entities\other
  */
-class SlapperPrimedTNT extends SlapperEntity {
+class SmaccerPrimedTNT extends SmaccerEntity {
     
     const TYPE_ID = 65;
     const HEIGHT = 0.98;
