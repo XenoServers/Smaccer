@@ -19,22 +19,22 @@ VERSION: "1.2.0" # Internal use only
 SlapBack:
   enabled: false
 
-# SmaccerRotation allows nearby Smaccers to look at you
-SmaccerRotation:
+# SlapperRotation allows nearby Smaccers to look at you
+SlapperRotation:
   enabled: false
   # This is the maximum distance that a Smaccer will target another player
   max-distance: 16
 
-# SmaccerCache allows you to cache or uncache Smaccers
-SmaccerCache:
+# SlapperCache allows you to cache or uncache Smaccers
+SlapperCache:
   enabled: false
 
-# SmaccerPlus gives you an easy UI for managing Smaccers
-SmaccerPlus:
+# SlapperPlus gives you an easy UI for managing Smaccers
+SlapperPlus:
   enabled: false
 
-# SmaccerCooldown limits how fast a Smaccer can be hit
-SmaccerCooldown:
+# SlapperCooldown limits how fast a Smaccer can be hit
+SlapperCooldown:
   enabled: false
   # Smaccer hit cooldown (in seconds)
   delay: 0.5

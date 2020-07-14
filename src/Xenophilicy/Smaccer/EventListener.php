@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Xenophilicy\Smaccer;
 
 use pocketmine\command\ConsoleCommandSender;
+use pocketmine\entity\Entity;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityMotionEvent;
@@ -12,11 +13,14 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\math\Vector2;
+use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\mcpe\protocol\AnimatePacket;
 use pocketmine\network\mcpe\protocol\MoveActorAbsolutePacket;
 use pocketmine\network\mcpe\protocol\MovePlayerPacket;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
+use slapper\entities\SlapperEntity;
+use slapper\entities\SlapperHuman;
 use Xenophilicy\Smaccer\entities\SmaccerEntity;
 use Xenophilicy\Smaccer\entities\SmaccerHuman;
 use Xenophilicy\Smaccer\events\SmaccerCreationEvent;
@@ -32,7 +36,7 @@ class EventListener implements Listener {
      * @param SmaccerCreationEvent $ev
      */
     public function onSmaccerCreation(SmaccerCreationEvent $ev){
-        if(!Smaccer::addonEnabled("SmaccerCache")) return;
+        if(!Smaccer::addonEnabled("SlapperCache")) return;
         if($ev->getCause() !== SmaccerCreationEvent::CAUSE_COMMAND) return;
         $entity = $ev->getEntity();
         $entity->saveNBT();
@@ -52,15 +56,15 @@ class EventListener implements Listener {
                 $event->getDamager()->dataPacket($pk);
             }
         }
-        if(Smaccer::addonEnabled("SmaccerCooldown")){
+        if(Smaccer::addonEnabled("SlapperCooldown")){
             $name = $event->getDamager()->getName();
             if(!isset(Smaccer::getInstance()->lastHit[$name])){
                 Smaccer::getInstance()->lastHit[$name] = microtime(true);
                 return;
             }
-            if((Smaccer::getInstance()->lastHit[$name] + Smaccer::$settings["SmaccerCooldown"]["delay"]) > microtime(true)){
+            if((Smaccer::getInstance()->lastHit[$name] + Smaccer::$settings["SlapperCooldown"]["delay"]) > microtime(true)){
                 $event->setCancelled();
-                $event->getDamager()->sendTip(Smaccer::$settings["SmaccerCooldown"]["message"]);
+                $event->getDamager()->sendTip(Smaccer::$settings["SlapperCooldown"]["message"]);
             }else{
                 Smaccer::getInstance()->lastHit[$name] = microtime(true);
             }
@@ -71,20 +75,18 @@ class EventListener implements Listener {
      * @param PlayerQuitEvent $event
      */
     public function onPlayerQuit(PlayerQuitEvent $event){
-        if(Smaccer::addonEnabled("SmaccerPlus")){
+        if(Smaccer::addonEnabled("SlapperPlus")){
             unset(Smaccer::getInstance()->entityIds[$event->getPlayer()->getName()]);
             unset(Smaccer::getInstance()->editingId[$event->getPlayer()->getName()]);
         }
-        if(Smaccer::addonEnabled("SmaccerCooldown")){
+        if(Smaccer::addonEnabled("SlapperCooldown")){
             unset(Smaccer::getInstance()->lastHit[$event->getPlayer()->getName()]);
         }
     }
     
     /**
      * @param EntityDamageEvent $event
-     *
      * @ignoreCancelled true
-     *
      * @return void
      */
     public function onEntityDamage(EntityDamageEvent $event): void{
@@ -129,11 +131,39 @@ class EventListener implements Listener {
     
     /**
      * @param EntitySpawnEvent $event
-     *
      * @return void
      */
     public function onEntitySpawn(EntitySpawnEvent $event): void{
         $entity = $event->getEntity();
+        if($entity instanceof SlapperEntity || $entity instanceof SlapperHuman){
+            Smaccer::getInstance()->getLogger()->notice("Converting Slapper entity to Smaccer entity...");
+            $entity->flagForDespawn();
+            $class = get_class($entity);
+            if($entity instanceof SlapperHuman) $type = "Human";else{
+                if(strpos($class, "other") === false) $type = substr(get_class($entity), strlen("slapper\\entities\\slapper"));else $type = substr(get_class($entity), strlen("slapper\\entities\\other\\slapper"));
+            }
+            $name = $entity->getNameTag();
+            $nbt = Entity::createBaseNBT($entity, null, $entity->getYaw(), $entity->getPitch());
+            $nbt->setShort("Health", 1);
+            $nbt->setTag(new CompoundTag("Commands", []));
+            $nbt->setString("MenuName", "");
+            $nbt->setString("CustomName", $name);
+            $nbt->setString("SmaccerVersion", Smaccer::getInstance()->getDescription()->getVersion());
+            if($type === "Human"){
+                $entity->saveNBT();
+                $inventoryTag = $entity->namedtag->getListTag("Inventory");
+                assert($inventoryTag !== null);
+                $nbt->setTag(clone $inventoryTag);
+                $skinTag = $entity->namedtag->getCompoundTag("Skin");
+                assert($skinTag !== null);
+                $nbt->setTag(clone $skinTag);
+            }
+            $newEntity = Entity::createEntity("Smaccer" . $type, $entity->getLevel(), $nbt);
+            $event = new SmaccerCreationEvent($newEntity, "Smaccer" . $type, null, SmaccerCreationEvent::CAUSE_COMMAND);
+            $event->call();
+            Smaccer::getInstance()->getLogger()->notice("Conversion successful");
+            return;
+        }
         if($entity instanceof SmaccerEntity || $entity instanceof SmaccerHuman){
             $clearLagg = Smaccer::getInstance()->getServer()->getPluginManager()->getPlugin("ClearLagg");
             if($clearLagg !== null){
@@ -145,7 +175,6 @@ class EventListener implements Listener {
     
     /**
      * @param EntityMotionEvent $event
-     *
      * @return void
      */
     public function onEntityMotion(EntityMotionEvent $event): void{
@@ -163,7 +192,7 @@ class EventListener implements Listener {
         $from = $event->getFrom();
         $to = $event->getTo();
         if($from->distance($to) < 0.1) return;
-        $maxDistance = Smaccer::$settings["SmaccerRotation"]["max-distance"];
+        $maxDistance = Smaccer::$settings["SlapperRotation"]["max-distance"];
         foreach($player->getLevel()->getNearbyEntities($player->getBoundingBox()->expandedCopy($maxDistance, $maxDistance, $maxDistance), $player) as $e){
             if($e instanceof Player) continue;
             if(substr($e->getSaveId(), 0, 7) !== "Smaccer") continue;

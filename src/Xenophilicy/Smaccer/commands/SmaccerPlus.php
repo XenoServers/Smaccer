@@ -25,7 +25,7 @@ class SmaccerPlus extends PluginCommand {
     
     public function __construct(){
         parent::__construct("smaccerplus", Smaccer::getInstance());
-        $this->setPermission("smaccerplus.command");
+        $this->setPermission("smaccer.plus");
         $this->setDescription("Manage Smaccer entities with a UI");
     }
     
@@ -33,11 +33,10 @@ class SmaccerPlus extends PluginCommand {
      * @param CommandSender $sender
      * @param string $commandLabel
      * @param string[] $args
-     *
      * @return mixed
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args){
-        if(!$sender->hasPermission("smaccerplus.command")){
+        if(!$sender->hasPermission("smaccer.plus")){
             $sender->sendMessage(Smaccer::PREFIX . TF::RED . "You don't have permission to manage Smaccers");
             return false;
         }

@@ -74,7 +74,6 @@ class CacheHandlerV2 implements CacheReader {
         $reader = new BigEndianNBTStream();
         foreach($files as $file){
             $fileName = basename($file, ".nbt");
-            Smaccer::getInstance()->getLogger()->debug(__FUNCTION__ . " Found Smaccer in v2 format: $fileName");
             $data = file_get_contents($file);
             $nbt = $reader->readCompressed($data);
             assert($nbt instanceof CompoundTag);

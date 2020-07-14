@@ -336,6 +336,15 @@ class EditSmaccer extends SubSmaccer {
                 $entity->sendData($entity->getViewers());
                 $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "Updated scale");
                 return true;
+            case "spin":
+            case "speed":
+            case "rotate":
+                $speed = array_shift($args) ?? 1.0;
+                $remove = ["remove", "", "disable", "off", "none", "stop"];
+                if(in_array($speed, $remove)) $speed = 0.0;
+                $entity->getDataPropertyManager()->setFloat(SmaccerEntity::DATA_SPINNING, (float)$speed);
+                $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "Updated rotation speed");
+                return true;
             default:
                 $sender->sendMessage(Smaccer::PREFIX . TF::RED . "Use " . TF::AQUA . "/smaccer help edit" . TF::RED . " to view all edit commands");
                 return false;

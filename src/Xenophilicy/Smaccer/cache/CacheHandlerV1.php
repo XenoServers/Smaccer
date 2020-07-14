@@ -11,7 +11,6 @@ use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\ListTag;
-use pocketmine\plugin\PluginLogger;
 use Xenophilicy\Smaccer\Smaccer;
 
 /**
@@ -67,14 +66,9 @@ class CacheHandlerV1 implements CacheReader {
         foreach($files as $file){
             $fileName = basename($file, ".slp");
             [$typeToUse, $world, $name,] = explode(".", $fileName);
-            $this->getLogger()->debug(__FUNCTION__ . " Found cached Smaccer in v1 format: $fileName");
             $nbt = $this->convertNbt($file);
             yield new CacheObject($name, $typeToUse, $world, $nbt);
         }
-    }
-    
-    private function getLogger(): PluginLogger{
-        return Smaccer::getInstance()->getLogger();
     }
     
     /**
@@ -82,15 +76,7 @@ class CacheHandlerV1 implements CacheReader {
      * @return CompoundTag|null
      */
     private function convertNbt($file){
-        $fileName = basename($file, ".slp");
-        // like SmaccerCreeper.world.Von.d603217a
-        // or   SmaccerHuman.world.Von.383d2bb4
-        $fileParts = explode(".", $fileName);
-        $typeToUse = $fileParts[0];
-        $world = $fileParts[1];
-        $this->getLogger()->debug(__FUNCTION__ . " Processing $fileName, type $typeToUse, world $world");
         if(!$data = file_get_contents($file)){
-            $this->getLogger()->debug(__FUNCTION__ . " Could not open Smaccer cache file: " . $file);
             return null;
         }
         $nbt = SerializedNbtFixer::fixSerializedCompoundTag(unserialize($data));
@@ -121,9 +107,7 @@ class CacheHandlerV1 implements CacheReader {
     /**
      * Takes an __PHP_Incomplete_Class and casts it to a stdClass object.
      * All properties will be made public in this step.
-     *
      * @see https://stackoverflow.com/a/28353091
-     *
      * @since  1.1.0
      * @param object $object __PHP_Incomplete_Class
      * @return object

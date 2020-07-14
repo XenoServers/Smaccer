@@ -25,7 +25,6 @@ class RCA extends PluginCommand {
      * @param CommandSender $sender
      * @param string $commandLabel
      * @param string[] $args
-     *
      * @return mixed
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args){

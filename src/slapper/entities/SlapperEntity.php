@@ -1,7 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
-namespace Xenophilicy\Smaccer\entities;
+namespace slapper\entities;
 
 use pocketmine\entity\Entity;
 use pocketmine\item\ItemFactory;
@@ -11,20 +12,19 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\mcpe\protocol\AddActorPacket as AddEntityPacket;
 use pocketmine\network\mcpe\protocol\AddPlayerPacket;
 use pocketmine\network\mcpe\protocol\MoveActorAbsolutePacket as MoveEntityAbsolutePacket;
-use pocketmine\network\mcpe\protocol\RemoveActorPacket;
+use pocketmine\network\mcpe\protocol\RemoveActorPacket as RemoveEntityPacket;
 use pocketmine\network\mcpe\protocol\SetActorDataPacket as SetEntityDataPacket;
 use pocketmine\Player;
 use pocketmine\utils\UUID;
-use Xenophilicy\Smaccer\SmaccerTrait;
+use slapper\SlapperTrait;
 
 /**
- * Class SmaccerEntity
- * @package Xenophilicy\Smaccer\entities
+ * Class SlapperEntity
+ * @package slapper\entities
  */
-class SmaccerEntity extends Entity {
-    use SmaccerTrait;
+class SlapperEntity extends Entity {
+    use SlapperTrait;
     
-    const DATA_SPINNING = 5;
     const TYPE_ID = 0;
     const HEIGHT = 0;
     
@@ -32,7 +32,7 @@ class SmaccerEntity extends Entity {
     private $tagId;
     
     /**
-     * SmaccerEntity constructor.
+     * SlapperEntity constructor.
      * @param Level $level
      * @param CompoundTag $nbt
      */
@@ -47,7 +47,7 @@ class SmaccerEntity extends Entity {
     
     public function saveNBT(): void{
         parent::saveNBT();
-        $this->saveSmaccerNbt();
+        $this->saveSlapperNbt();
     }
     
     public function sendNameTag(Player $player): void{
@@ -58,11 +58,10 @@ class SmaccerEntity extends Entity {
     }
     
     public function despawnFrom(Player $player, bool $send = true): void{
-        if($send){
-            $pk = new RemoveActorPacket();
-            $pk->entityUniqueId = $this->id;
-            $player->dataPacket($pk);
-        }
+        parent::despawnFrom($player, $send);
+        $pk = new RemoveEntityPacket();
+        $pk->entityUniqueId = $this->tagId;
+        $player->dataPacket($pk);
     }
     
     public function broadcastMovement(bool $teleport = false): void{
@@ -72,6 +71,7 @@ class SmaccerEntity extends Entity {
             $pk->entityRuntimeId = $this->tagId;
             $pk->position = $this->asVector3()->add(0, static::HEIGHT + 1.62);
             $pk->xRot = $pk->yRot = $pk->zRot = 0;
+            
             $this->level->addChunkPacket($this->chunk->getX(), $this->chunk->getZ(), $pk);
         }
     }
@@ -85,7 +85,9 @@ class SmaccerEntity extends Entity {
         $pk->pitch = $this->pitch;
         $pk->metadata = $this->getDataPropertyManager()->getAll();
         unset($pk->metadata[self::DATA_NAMETAG]);
+        
         $player->dataPacket($pk);
+        
         $pk2 = new AddPlayerPacket();
         $pk2->entityRuntimeId = $this->tagId;
         $pk2->uuid = UUID::fromRandom();
@@ -93,6 +95,7 @@ class SmaccerEntity extends Entity {
         $pk2->position = $this->asVector3()->add(0, static::HEIGHT);
         $pk2->item = ItemFactory::get(ItemIds::AIR);
         $pk2->metadata = [self::DATA_SCALE => [self::DATA_TYPE_FLOAT, 0.0]];
+        
         $player->dataPacket($pk2);
     }
 }
