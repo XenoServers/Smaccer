@@ -145,6 +145,7 @@ class SmaccerPlus extends PluginCommand {
             $yaw = (int)$data[2];
             $pitch = (int)$data[3];
             $teleport = (bool)$data[4];
+            $entity->namedtag->setString(SmaccerEntity::TAG_NAME, $name);
             $entity->setNameTag($name);
             if($teleport){
                 $entity->teleport($player);

@@ -39,7 +39,7 @@ class SpawnSmaccer extends SubSmaccer {
         }
         $name = str_replace(["{color}", "{line}"], ["§", "\n"], trim(implode(" ", $args)));
         if(empty($name)){
-            $name = $sender->getDisplayName();
+            $name = str_replace("{player}", $sender->getDisplayName(), Smaccer::$settings["Default"]["spawn-name"]);
         }
         $types = EntityManager::ENTITY_TYPES;
         $aliases = EntityManager::ENTITY_ALIASES;

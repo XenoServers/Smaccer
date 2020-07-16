@@ -25,9 +25,11 @@ use Xenophilicy\Smaccer\commands\RCA;
 use Xenophilicy\Smaccer\commands\RemoveSmaccer;
 use Xenophilicy\Smaccer\commands\SmaccerPlus;
 use Xenophilicy\Smaccer\commands\SpawnSmaccer;
+use Xenophilicy\Smaccer\entities\SmaccerEntity;
 use Xenophilicy\Smaccer\entities\SmaccerHuman;
 use Xenophilicy\Smaccer\events\SmaccerCreationEvent;
 use Xenophilicy\Smaccer\tasks\CheckSlapperPluginTask;
+use Xenophilicy\Smaccer\tasks\SpinEntityTask;
 
 /**
  * Class Smaccer
@@ -35,7 +37,7 @@ use Xenophilicy\Smaccer\tasks\CheckSlapperPluginTask;
  */
 class Smaccer extends PluginBase implements Listener {
     
-    public const CONFIG_VERSION = "1.2.0";
+    public const CONFIG_VERSION = "1.3.0";
     
     public const PREFIX = TF::YELLOW . "[" . TF::GREEN . "Smaccer" . TF::YELLOW . "] ";
     /** @var array */
@@ -74,6 +76,7 @@ class Smaccer extends PluginBase implements Listener {
         }
         Smaccer::getInstance()->getServer()->getPluginManager()->registerEvents(new EventListener(), Smaccer::getInstance());
         EntityManager::init();
+        QueryManager::init();
         Smaccer::getInstance()->enableAddons();
         $cmd = new BaseSmaccer();
         Smaccer::getInstance()->getServer()->getCommandMap()->register("smaccer", $cmd);
@@ -85,6 +88,7 @@ class Smaccer extends PluginBase implements Listener {
         $cmd->registerSubSmaccer("remove", new RemoveSmaccer(), ["delete", "rm", "del"]);
         $cmd->registerSubSmaccer("cancel", new CancelSmaccer(), ["stopremove", "stopid", "stop"]);
         $cmd->registerSubSmaccer("spawn", new SpawnSmaccer(), ["add", "make", "create", "spawn", "apawn", "spanw", "new"]);
+        $this->getScheduler()->scheduleRepeatingTask(new SpinEntityTask(), 1);
     }
     
     public static function getInstance(): self{
@@ -136,8 +140,10 @@ class Smaccer extends PluginBase implements Listener {
                 $motion = new ListTag("Motion", [new DoubleTag("", 0.0), new DoubleTag("", 0.0), new DoubleTag("", 0.0)]);
                 $nbt->setTag($motion);
             }
+            $name = str_replace("Â", "", $cacheObject->name);
+            $nbt->setString(SmaccerEntity::TAG_NAME, $name);
             $entity = Entity::createEntity($cacheObject->type, $level, $nbt);
-            $entity->setNameTag(str_replace("Â", "", $cacheObject->name));
+            $entity->setNameTag($name);
             $entity->setNameTagAlwaysVisible();
             $entity->setNameTagVisible();
             if(!$entity instanceof SmaccerHuman) continue;
@@ -185,9 +191,14 @@ class Smaccer extends PluginBase implements Listener {
         $nbt = Entity::createBaseNBT($player, null, $player->getYaw(), $player->getPitch());
         $nbt->setShort("Health", 1);
         $nbt->setTag(new CompoundTag("Commands", []));
+        $nbt->setByte(SmaccerEntity::TAG_ROTATE, 1);
         $nbt->setString("MenuName", "");
+        $nbt->setString(SmaccerEntity::TAG_NAME, $name);
         $nbt->setString("CustomName", $name);
         $nbt->setString("SmaccerVersion", $this->getDescription()->getVersion());
+        if($type === "EnderDragon"){
+            $nbt->setInt("DragonPhase", 5);
+        }
         if($type === "Human"){
             $player->saveNBT();
             $inventoryTag = $player->namedtag->getListTag("Inventory");

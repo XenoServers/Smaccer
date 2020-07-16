@@ -13,6 +13,7 @@ use pocketmine\utils\TextFormat as TF;
 use Xenophilicy\Smaccer\entities\other\SmaccerFallingSand;
 use Xenophilicy\Smaccer\entities\SmaccerEntity;
 use Xenophilicy\Smaccer\entities\SmaccerHuman;
+use Xenophilicy\Smaccer\QueryManager;
 use Xenophilicy\Smaccer\Smaccer;
 
 /**
@@ -209,6 +210,7 @@ class EditSmaccer extends SubSmaccer {
                 $name = str_replace(["{color}", "{line}"], ["§", "\n"], trim(implode(" ", $args)));
                 $remove = ["remove", "", "disable", "off", "hide", "none"];
                 if(in_array($name, $remove)) $name = "";
+                $entity->namedtag->setString(SmaccerEntity::TAG_NAME, $name);
                 $entity->setNameTag($name);
                 $entity->sendData($entity->getViewers());
                 $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "Name updated");
@@ -341,10 +343,186 @@ class EditSmaccer extends SubSmaccer {
             case "rotate":
                 $speed = array_shift($args) ?? 1.0;
                 $remove = ["remove", "", "disable", "off", "none", "stop"];
-                if(in_array($speed, $remove)) $speed = 0.0;
-                $entity->getDataPropertyManager()->setFloat(SmaccerEntity::DATA_SPINNING, (float)$speed);
+                if(in_array($speed, $remove)){
+                    $entity->namedtag->removeTag(SmaccerEntity::TAG_SPIN);
+                    $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "Removed rotation");
+                    return true;
+                }
+                if(!is_numeric($speed)){
+                    $sender->sendMessage(Smaccer::PREFIX . TF::RED . "Speed value must be numeric");
+                    return false;
+                }
+                $entity->namedtag->setFloat(SmaccerEntity::TAG_SPIN, (float)$speed);
                 $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "Updated rotation speed");
                 return true;
+            case "follow":
+            case "look":
+                $look = array_shift($args);
+                if(in_array($look, ["off", "false", false, "no", "remove", "stop", "none", "disable"])){
+                    $entity->namedtag->setByte(SmaccerEntity::TAG_ROTATE, 0);
+                    $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "Following disabled");
+                    return true;
+                }elseif(in_array($look, ["on", "true", true, "yes", "enable"])){
+                    $entity->namedtag->setByte(SmaccerEntity::TAG_ROTATE, 1);
+                    $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "Following enabled");
+                    return true;
+                }else{
+                    $sender->sendMessage(Smaccer::PREFIX . TF::RED . "Usage: /smaccer edit <eid> follow <on|off>");
+                    return false;
+                }
+            case "world":
+            case "worlds":
+            case "level":
+            case "levels":
+                if($entity->namedtag->hasTag(SmaccerEntity::TAG_SERVER)){
+                    $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That entity already has servers attached, remove those before using worlds");
+                    return false;
+                }
+                $mode = array_shift($args);
+                switch($mode){
+                    case "add":
+                    case "new":
+                        if(!isset($args[0])){
+                            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "Usage: /smaccer edit <eid> worlds <add <name>");
+                            return false;
+                        }
+                        $name = array_shift($args);
+                        $worlds = $entity->namedtag->getCompoundTag(SmaccerEntity::TAG_WORLD) ?? new CompoundTag(SmaccerEntity::TAG_WORLD);
+                        if($worlds->hasTag($name)){
+                            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That world has already been added to that entity");
+                            return false;
+                        }
+                        $worlds->setString($name, $name);
+                        $entity->namedtag->setTag($worlds);
+                        $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "World added");
+                        return true;
+                    case "del":
+                    case "delete":
+                    case "rem":
+                    case "remove":
+                        if(!isset($args[0])){
+                            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "Usage: /smaccer edit <eid> worlds remove <name>");
+                            return false;
+                        }
+                        $name = array_shift($args);
+                        $worlds = $entity->namedtag->getCompoundTag(SmaccerEntity::TAG_WORLD) ?? new CompoundTag(SmaccerEntity::TAG_WORLD);
+                        if(!$worlds->hasTag($name)){
+                            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That world doesn't exist on that entity");
+                            return false;
+                        }
+                        $worlds->removeTag($name);
+                        $entity->namedtag->setTag($worlds);
+                        if($worlds->getCount() === 0) $entity->namedtag->removeTag(SmaccerEntity::TAG_WORLD);
+                        $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "World removed");
+                        return true;
+                    case "list":
+                    case "show":
+                        $worlds = $entity->namedtag->getCompoundTag(SmaccerEntity::TAG_WORLD);
+                        if($worlds === null || $worlds->getCount() === 0){
+                            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That entity doesn't have any worlds added");
+                            return false;
+                        }
+                        $id = 0;
+                        foreach($worlds as $world){
+                            $id++;
+                            $sender->sendMessage(Smaccer::PREFIX . TF::YELLOW . "[" . TF::LIGHT_PURPLE . $id . TF::YELLOW . "] " . TF::GREEN . $world->getValue());
+                        }
+                        return true;
+                    case "clear":
+                    case "delall":
+                    case "reset":
+                        if($entity->namedtag->hasTag(SmaccerEntity::TAG_WORLD)){
+                            $entity->namedtag->removeTag(SmaccerEntity::TAG_WORLD);
+                            $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "All worlds removed");
+                            return true;
+                        }else{
+                            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That entity doesn't have any worlds added");
+                            return false;
+                        }
+                    default:
+                        $sender->sendMessage(Smaccer::PREFIX . TF::RED . "Usage: /smaccer edit <eid> worlds <add <name>|remove <name>|list|clear>");
+                        return false;
+                }
+            case "server":
+            case "servers":
+                if($entity->namedtag->hasTag(SmaccerEntity::TAG_WORLD)){
+                    $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That entity already has worlds attached, remove those before using servers");
+                    return false;
+                }
+                $mode = array_shift($args);
+                switch($mode){
+                    case "add":
+                    case "new":
+                        if(!isset($args[0])){
+                            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "Usage: /smaccer edit <eid> servers add <ip> [port]");
+                            return false;
+                        }
+                        $ip = array_shift($args);
+                        $port = $args[0] ?? 19132;
+                        if(!is_numeric($port)){
+                            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "Port must be an integer");
+                            return false;
+                        }
+                        $server = $ip . ":" . $port;
+                        $servers = $entity->namedtag->getCompoundTag(SmaccerEntity::TAG_SERVER) ?? new CompoundTag(SmaccerEntity::TAG_SERVER);
+                        if($servers->hasTag($server)){
+                            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That server has already been added to that entity");
+                            return false;
+                        }
+                        $servers->setString($server, $server);
+                        $entity->namedtag->setTag($servers);
+                        QueryManager::initServer($server);
+                        $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "Server added");
+                        return true;
+                    case "del":
+                    case "delete":
+                    case "rem":
+                    case "remove":
+                        if(!isset($args[0])){
+                            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "Usage: /smaccer edit <eid> servers remove <ip> [port]");
+                            return false;
+                        }
+                        $ip = array_shift($args);
+                        $port = $args[0] ?? 19132;
+                        $server = $ip . ":" . $port;
+                        $servers = $entity->namedtag->getCompoundTag(SmaccerEntity::TAG_SERVER) ?? new CompoundTag(SmaccerEntity::TAG_SERVER);
+                        if(!$servers->hasTag($server)){
+                            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That server doesn't exist on that entity");
+                            return false;
+                        }
+                        $servers->removeTag($server);
+                        $entity->namedtag->setTag($servers);
+                        if($servers->getCount() === 0) $entity->namedtag->removeTag(SmaccerEntity::TAG_SERVER);
+                        $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "Server removed");
+                        return true;
+                    case "list":
+                    case "show":
+                        $servers = $entity->namedtag->getCompoundTag(SmaccerEntity::TAG_SERVER);
+                        if($servers === null || $servers->getCount() === 0){
+                            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That entity doesn't have any servers added");
+                            return false;
+                        }
+                        $id = 0;
+                        foreach($servers as $server){
+                            $id++;
+                            $sender->sendMessage(Smaccer::PREFIX . TF::YELLOW . "[" . TF::LIGHT_PURPLE . $id . TF::YELLOW . "] " . TF::GREEN . $server->getValue());
+                        }
+                        return true;
+                    case "clear":
+                    case "delall":
+                    case "reset":
+                        if($entity->namedtag->hasTag(SmaccerEntity::TAG_SERVER)){
+                            $entity->namedtag->removeTag(SmaccerEntity::TAG_SERVER);
+                            $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "All servers removed");
+                            return true;
+                        }else{
+                            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That entity doesn't have any servers added");
+                            return false;
+                        }
+                    default:
+                        $sender->sendMessage(Smaccer::PREFIX . TF::RED . "Usage: /smaccer edit <eid> servers <add <ip> [port]|remove <ip> [port]|list|clear>");
+                        return false;
+                }
             default:
                 $sender->sendMessage(Smaccer::PREFIX . TF::RED . "Use " . TF::AQUA . "/smaccer help edit" . TF::RED . " to view all edit commands");
                 return false;

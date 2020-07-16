@@ -44,6 +44,10 @@ class HelpSmaccer extends SubSmaccer {
             $sender->sendMessage(self::STAR . "tphere: /smaccer edit <eid> tphere");
             $sender->sendMessage(self::STAR . "tpto: /smaccer edit <eid> tpto");
             $sender->sendMessage(self::STAR . "menuname: /smaccer edit <eid> menuname <name|remove>");
+            $sender->sendMessage(self::STAR . "spin: /smaccer edit <eid> spin <speed|remove>");
+            $sender->sendMessage(self::STAR . "follow: /smaccer edit <eid> follow <on|off>");
+            $sender->sendMessage(self::STAR . "worlds: /smaccer edit <eid> worlds <add <name>|remove <name>|list|clear>");
+            $sender->sendMessage(self::STAR . "servers: /smaccer edit <eid> servers <add <ip> [port]|remove <ip> [port]|list|clear>");
         }else{
             $sender->sendMessage(Smaccer::PREFIX . TF::AQUA . "---- " . TF::GOLD . "Smaccer Help " . TF::AQUA . " ----");
             $sender->sendMessage(self::STAR . "spawn: /smaccer spawn <type> [name]");

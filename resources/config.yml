@@ -11,7 +11,28 @@
 #                                         $$ |                                      /  \__$$ |
 #                                         $$ |                                      $$    $$/
 #                                         $$/                                        $$$$$$/
-VERSION: "1.2.0" # Internal use only
+VERSION: "1.3.0" # Internal use only
+
+
+Default:
+  # This is the default nametag that will appear when you create a new Smaccer entity
+  # Available tags:
+  # {player} use the player's name
+  spawn-name: ""
+  # This is the interval time (in ticks) that the query task will execute for server player counts
+  # Default is 200 ticks (10 seconds)
+  query-interval: 200
+  # This adds the ability to show player counts on Smaccer nametags
+  count-tags:
+    # This is the format that will be used for showing the amount of players on a world (or multiple)
+    # Available tags:
+    # {players} shows total world player count
+    worlds: "§a{players} §eonline"
+    # This is the format that will be used for showing the amount of players on a server (or multiple)
+    # Available tags:
+    # {players} shows total server player count
+    # {maximum} shows player cap for the server
+    servers: "§a{players}§7/§c{maximum}"
 
 # Set these add-ons to true or false to enable or disable their features (respectively)
 

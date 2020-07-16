@@ -24,7 +24,11 @@ use Xenophilicy\Smaccer\SmaccerTrait;
 class SmaccerEntity extends Entity {
     use SmaccerTrait;
     
-    const DATA_SPINNING = 5;
+    const TAG_SPIN = "spin";
+    const TAG_SERVER = "servers";
+    const TAG_WORLD = "worlds";
+    const TAG_ROTATE = "rotate";
+    const TAG_NAME = "name";
     const TYPE_ID = 0;
     const HEIGHT = 0;
     

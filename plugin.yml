@@ -1,6 +1,6 @@
 name: Smaccer
 author: Xenophilicy
-version: 2.0.0
+version: 2.1.0
 description: A massive combination of Slapper and all its add-on plugins
 main: Xenophilicy\Smaccer\Smaccer
 api: 3.13.0

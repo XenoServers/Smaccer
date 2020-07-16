@@ -7,13 +7,16 @@ A massive combination of [Slapper](https://github.com/jojoe77777/Slapper) and al
 - [X] [SlapperCache](https://github.com/jojoe77777/SlapperCache)
 - [X] [SlapperPlus](https://github.com/jojoe77777/SlapperPlus)
 - [X] [SlapperCooldown](https://github.com/jojoe77777/SlapperCooldown)
-- [ ] [SlapperPlayerCount](https://github.com/ethaniccc/SlapperPlayerCount)
-- [ ] [WorldPlayerCount](https://github.com/xXKHaLeD098Xx/WorldPlayerCount)
+- [X] [SlapperPlayerCount](https://github.com/ethaniccc/SlapperPlayerCount)
+- [X] [WorldPlayerCount](https://github.com/xXKHaLeD098Xx/WorldPlayerCount)
 
 ### Added Features
 * Added `/smaccer edit <eid> armor` to allow editing all Smaccer armor at the same time
 * Smaccers can be edited from console (most edits)
 * List Smaccers in a level or on all levels
+* Smaccers can spin continuously with `/smaccer edit <eid> spin <speed|remove>`
+* Smaccers show player counts for worlds and servers
+* SlapperRotation is toggleable for all entities with `/smaccer edit <eid> follow <on|off>`
 
 ### Usage notes
 * This plugin is designed for [PocketMine-MP](https://github.com/pmmp/PocketMine-MP) ONLY. Support for any variations, forks, or spoons will NOT be provided. 
