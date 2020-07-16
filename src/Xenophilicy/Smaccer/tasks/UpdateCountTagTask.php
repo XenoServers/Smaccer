@@ -53,7 +53,7 @@ class UpdateCountTagTask extends Task {
                     $entity->setNameTag($entity->namedtag->getString(SmaccerEntity::TAG_NAME) . TF::EOL . $nametag);
                     return;
                 }
-                $entity->setNameTag($entity->namedtag->getString(SmaccerEntity::TAG_NAME));
+                $entity->setNameTag($entity->namedtag->getString(SmaccerEntity::TAG_NAME, ""));
             }
         }
     }

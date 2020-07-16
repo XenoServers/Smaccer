@@ -166,6 +166,7 @@ class EventListener implements Listener {
             $newEntity = Entity::createEntity("Smaccer" . $type, $entity->getLevel(), $nbt);
             $event = new SmaccerCreationEvent($newEntity, "Smaccer" . $type, null, SmaccerCreationEvent::CAUSE_COMMAND);
             $event->call();
+            $entity->flagForDespawn();
             Smaccer::getInstance()->getLogger()->notice("Conversion successful");
             return;
         }
