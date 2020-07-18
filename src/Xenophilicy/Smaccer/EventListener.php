@@ -13,8 +13,6 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\math\Vector2;
-use pocketmine\nbt\tag\CompoundTag;
-use pocketmine\nbt\tag\NamedTag;
 use pocketmine\network\mcpe\protocol\AnimatePacket;
 use pocketmine\network\mcpe\protocol\MoveActorAbsolutePacket;
 use pocketmine\network\mcpe\protocol\MovePlayerPacket;
@@ -147,10 +145,8 @@ class EventListener implements Listener {
             $oldnbt = $entity->namedtag;
             $nbt = Entity::createBaseNBT($entity, null, $entity->getYaw(), $entity->getPitch());
             $nbt->setShort("Health", 1);
-            /** @var NamedTag[] */
             $cmds = $oldnbt->getCompoundTag(SmaccerEntity::TAG_COMMAND);
-            /** @noinspection PhpParamsInspection */
-            $nbt->setTag(new CompoundTag(SmaccerEntity::TAG_COMMAND, $cmds));
+            $nbt->setTag($cmds);
             $nbt->setByte(SmaccerEntity::TAG_ROTATE, 1);
             $nbt->setString("MenuName", "");
             $nbt->setString(SmaccerEntity::TAG_NAME, $name);
