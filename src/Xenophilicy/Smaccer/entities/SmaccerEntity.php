@@ -29,6 +29,7 @@ class SmaccerEntity extends Entity {
     const TAG_WORLD = "worlds";
     const TAG_ROTATE = "rotate";
     const TAG_NAME = "name";
+    const TAG_COMMAND = "Commands";
     const TYPE_ID = 0;
     const HEIGHT = 0;
     

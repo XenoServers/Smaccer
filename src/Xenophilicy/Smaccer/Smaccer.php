@@ -21,8 +21,8 @@ use Xenophilicy\Smaccer\commands\EditSmaccer;
 use Xenophilicy\Smaccer\commands\HelpSmaccer;
 use Xenophilicy\Smaccer\commands\IdSmaccer;
 use Xenophilicy\Smaccer\commands\ListSmaccer;
-use Xenophilicy\Smaccer\commands\RCA;
 use Xenophilicy\Smaccer\commands\RemoveSmaccer;
+use Xenophilicy\Smaccer\commands\RunCommandAs;
 use Xenophilicy\Smaccer\commands\SmaccerPlus;
 use Xenophilicy\Smaccer\commands\SpawnSmaccer;
 use Xenophilicy\Smaccer\entities\SmaccerEntity;
@@ -59,6 +59,10 @@ class Smaccer extends PluginBase implements Listener {
     /** @var CacheHandlerV1 */
     public $legacyCacheHandler;
     
+    public static function getInstance(): self{
+        return self::$instance;
+    }
+    
     /**
      * @return void
      */
@@ -74,13 +78,12 @@ class Smaccer extends PluginBase implements Listener {
             $this->getServer()->getPluginManager()->disablePlugin($this);
             return;
         }
-        Smaccer::getInstance()->getServer()->getPluginManager()->registerEvents(new EventListener(), Smaccer::getInstance());
+        $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
         EntityManager::init();
         QueryManager::init();
-        Smaccer::getInstance()->enableAddons();
+        $this->enableAddons();
         $cmd = new BaseSmaccer();
-        Smaccer::getInstance()->getServer()->getCommandMap()->register("smaccer", $cmd);
-        Smaccer::getInstance()->getServer()->getCommandMap()->register("rca", new RCA());
+        $this->getServer()->getCommandMap()->register("smaccer", $cmd);
         $cmd->registerSubSmaccer("help", new HelpSmaccer());
         $cmd->registerSubSmaccer("id", new IdSmaccer());
         $cmd->registerSubSmaccer("edit", new EditSmaccer());
@@ -89,10 +92,7 @@ class Smaccer extends PluginBase implements Listener {
         $cmd->registerSubSmaccer("cancel", new CancelSmaccer(), ["stopremove", "stopid", "stop"]);
         $cmd->registerSubSmaccer("spawn", new SpawnSmaccer(), ["add", "make", "create", "spawn", "apawn", "spanw", "new"]);
         $this->getScheduler()->scheduleRepeatingTask(new SpinEntityTask(), 1);
-    }
-    
-    public static function getInstance(): self{
-        return self::$instance;
+        $this->getServer()->getCommandMap()->register("runcommandas", new RunCommandAs());
     }
     
     public function enableAddons(){
@@ -177,7 +177,11 @@ class Smaccer extends PluginBase implements Listener {
         $entity->spawnToAll();
         $event = new SmaccerCreationEvent($entity, "Smaccer" . $type, $player, SmaccerCreationEvent::CAUSE_COMMAND);
         $event->call();
-        $entity->spawnToAll();
+        if($entity instanceof SmaccerHuman){
+            $item = $player->getInventory()->getItemInHand();
+            $entity->getInventory()->setItemInHand($item);
+            $entity->getInventory()->sendHeldItem($entity->getViewers());
+        }
         $player->sendMessage(self::PREFIX . TF::GREEN . "Created {$type} entity");
     }
     
@@ -190,7 +194,7 @@ class Smaccer extends PluginBase implements Listener {
     public function makeNBT($type, Player $player, string $name): CompoundTag{
         $nbt = Entity::createBaseNBT($player, null, $player->getYaw(), $player->getPitch());
         $nbt->setShort("Health", 1);
-        $nbt->setTag(new CompoundTag("Commands", []));
+        $nbt->setTag(new CompoundTag(SmaccerEntity::TAG_COMMAND, []));
         $nbt->setByte(SmaccerEntity::TAG_ROTATE, 1);
         $nbt->setString("MenuName", "");
         $nbt->setString(SmaccerEntity::TAG_NAME, $name);

@@ -242,7 +242,7 @@ class EditSmaccer extends SubSmaccer {
                     return false;
                 }
                 $input = trim(implode(" ", $args));
-                $commands = $entity->namedtag->getCompoundTag("Commands") ?? new CompoundTag("Commands");
+                $commands = $entity->namedtag->getCompoundTag(SmaccerEntity::TAG_COMMAND) ?? new CompoundTag(SmaccerEntity::TAG_COMMAND);
                 if($commands->hasTag($input)){
                     $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That command has already been added");
                     return false;
@@ -260,7 +260,7 @@ class EditSmaccer extends SubSmaccer {
                     return false;
                 }
                 $input = trim(implode(" ", $args));
-                $commands = $entity->namedtag->getCompoundTag("Commands") ?? new CompoundTag("Commands");
+                $commands = $entity->namedtag->getCompoundTag(SmaccerEntity::TAG_COMMAND) ?? new CompoundTag(SmaccerEntity::TAG_COMMAND);
                 if(!$commands->hasTag($input)){
                     $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That command doesn't exist");
                     return false;
@@ -272,7 +272,7 @@ class EditSmaccer extends SubSmaccer {
             case "listcommands":
             case "listcmds":
             case "listcs":
-                $commands = $entity->namedtag->getCompoundTag("Commands");
+                $commands = $entity->namedtag->getCompoundTag(SmaccerEntity::TAG_COMMAND);
                 if($commands === null || $commands->getCount() === 0){
                     $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That entity doesn't have any commands");
                     return false;

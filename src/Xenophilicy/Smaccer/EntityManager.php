@@ -64,7 +64,7 @@ use Xenophilicy\Smaccer\entities\other\{SmaccerBoat, SmaccerFallingSand, Smaccer
 
 /**
  * Class EntityManager
- * @package Xenophilicy\BaseSmaccer
+ * @package Xenophilicy\Smaccer
  */
 class EntityManager {
     const ENTITY_TYPES = ["Chicken", "Pig", "Sheep", "Cow", "MushroomCow", "Wolf", "Enderman", "Spider", "Skeleton", "PigZombie", "Creeper", "Slime", "Silverfish", "Villager", "Zombie", "Human", "Bat", "CaveSpider", "LavaSlime", "Ghast", "Ocelot", "Blaze", "ZombieVillager", "Snowman", "Minecart", "FallingSand", "Boat", "PrimedTNT", "Horse", "Donkey", "Mule", "SkeletonHorse", "ZombieHorse", "Witch", "Rabbit", "Stray", "Husk", "WitherSkeleton", "IronGolem", "Snowman", "LavaSlime", "Squid", "ElderGuardian", "Endermite", "Evoker", "Guardian", "PolarBear", "Shulker", "Vex", "Vindicator", "Wither", "Llama", "Cat", "Cod", "Salmon", "TropicalFish", "Dolphin", "Panda", "Pufferfish", "Drowned", "Turtle", "Parrot", "EnderDragon", "Entermite", "Phantom"];

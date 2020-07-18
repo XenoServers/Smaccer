@@ -7,7 +7,7 @@ use pocketmine\command\CommandSender;
 
 /**
  * Class SubSmaccer
- * @package Xenophilicy\BaseSmaccer\commands
+ * @package Xenophilicy\Smaccer\commands
  */
 abstract class SubSmaccer {
     

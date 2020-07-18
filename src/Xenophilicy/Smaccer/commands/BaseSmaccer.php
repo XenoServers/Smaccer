@@ -10,7 +10,7 @@ use Xenophilicy\Smaccer\Smaccer;
 
 /**
  * Class BaseSmaccer
- * @package Xenophilicy\BaseSmaccer\commands
+ * @package Xenophilicy\Smaccer\commands
  */
 class BaseSmaccer extends PluginCommand {
     

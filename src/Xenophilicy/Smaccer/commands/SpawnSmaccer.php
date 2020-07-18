@@ -7,6 +7,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\entity\Entity;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
+use Xenophilicy\Smaccer\entities\SmaccerHuman;
 use Xenophilicy\Smaccer\EntityManager;
 use Xenophilicy\Smaccer\events\SmaccerCreationEvent;
 use Xenophilicy\Smaccer\Smaccer;
@@ -65,6 +66,11 @@ class SpawnSmaccer extends SubSmaccer {
         $event = new SmaccerCreationEvent($entity, "Smaccer" . $chosenType, $sender, SmaccerCreationEvent::CAUSE_COMMAND);
         $event->call();
         $entity->spawnToAll();
+        if($entity instanceof SmaccerHuman){
+            $item = $sender->getInventory()->getItemInHand();
+            $entity->getInventory()->setItemInHand($item);
+            $entity->getInventory()->sendHeldItem($entity->getViewers());
+        }
         $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . $chosenType . " entity spawned with name " . TF::WHITE . "'" . TF::BLUE . $name . TF::WHITE . "'" . TF::GREEN . " and entity ID " . TF::BLUE . $entity->getId());
         return true;
     }

@@ -14,6 +14,7 @@ use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\math\Vector2;
 use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\nbt\tag\NamedTag;
 use pocketmine\network\mcpe\protocol\AnimatePacket;
 use pocketmine\network\mcpe\protocol\MoveActorAbsolutePacket;
 use pocketmine\network\mcpe\protocol\MovePlayerPacket;
@@ -120,7 +121,7 @@ class EventListener implements Listener {
                 unset(Smaccer::getInstance()->idSessions[$damagerName]);
                 return;
             }
-            if(($commands = $entity->namedtag->getCompoundTag("Commands")) !== null){
+            if(($commands = $entity->namedtag->getCompoundTag(SmaccerEntity::TAG_COMMAND)) !== null){
                 $server = Smaccer::getInstance()->getServer();
                 foreach($commands as $stringTag){
                     $server->dispatchCommand(new ConsoleCommandSender(), str_replace("{player}", '"' . $damagerName . '"', $stringTag->getValue()));
@@ -143,17 +144,18 @@ class EventListener implements Listener {
                 if(strpos($class, "other") === false) $type = substr(get_class($entity), strlen("slapper\\entities\\slapper"));else $type = substr(get_class($entity), strlen("slapper\\entities\\other\\slapper"));
             }
             $name = $entity->getNameTag();
+            $oldnbt = $entity->namedtag;
             $nbt = Entity::createBaseNBT($entity, null, $entity->getYaw(), $entity->getPitch());
             $nbt->setShort("Health", 1);
-            $nbt->setTag(new CompoundTag("Commands", []));
+            /** @var NamedTag[] */
+            $cmds = $oldnbt->getCompoundTag(SmaccerEntity::TAG_COMMAND);
+            /** @noinspection PhpParamsInspection */
+            $nbt->setTag(new CompoundTag(SmaccerEntity::TAG_COMMAND, $cmds));
             $nbt->setByte(SmaccerEntity::TAG_ROTATE, 1);
             $nbt->setString("MenuName", "");
             $nbt->setString(SmaccerEntity::TAG_NAME, $name);
             $nbt->setString("CustomName", $name);
             $nbt->setString("SmaccerVersion", Smaccer::getInstance()->getDescription()->getVersion());
-            if($type === "EnderDragon"){
-                $nbt->setInt("DragonPhase", 5);
-            }
             if($type === "Human"){
                 $entity->saveNBT();
                 $inventoryTag = $entity->namedtag->getListTag("Inventory");
@@ -166,7 +168,6 @@ class EventListener implements Listener {
             $newEntity = Entity::createEntity("Smaccer" . $type, $entity->getLevel(), $nbt);
             $event = new SmaccerCreationEvent($newEntity, "Smaccer" . $type, null, SmaccerCreationEvent::CAUSE_COMMAND);
             $event->call();
-            $entity->flagForDespawn();
             Smaccer::getInstance()->getLogger()->notice("Conversion successful");
             return;
         }
