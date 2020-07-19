@@ -18,6 +18,7 @@ use pocketmine\network\mcpe\protocol\MoveActorAbsolutePacket;
 use pocketmine\network\mcpe\protocol\MovePlayerPacket;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
+use slapper\entities\other\SlapperFallingSand;
 use slapper\entities\SlapperEntity;
 use slapper\entities\SlapperHuman;
 use Xenophilicy\Smaccer\entities\SmaccerEntity;
@@ -148,6 +149,8 @@ class EventListener implements Listener {
             $nbt->setString(SmaccerEntity::TAG_NAME, $name);
             $nbt->setString("CustomName", $name);
             $nbt->setString("SmaccerVersion", Smaccer::getInstance()->getDescription()->getVersion());
+            $nbt->setFloat(SmaccerEntity::TAG_SCALE, $oldnbt->getFloat(SmaccerEntity::TAG_SCALE));
+            if($entity instanceof SlapperFallingSand) $nbt->setInt(SmaccerEntity::TAG_BLOCKID, $oldnbt->getInt(SmaccerEntity::TAG_BLOCKID));
             if($type === "Human"){
                 $entity->saveNBT();
                 $inventoryTag = $entity->namedtag->getListTag("Inventory");
