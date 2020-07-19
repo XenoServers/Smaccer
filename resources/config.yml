@@ -15,7 +15,7 @@ VERSION: "1.4.0" # Internal use only
 
 
 Default:
-  # Choose whether new Smaccers and existing ones without explicit instruction should have SlapBack enabled
+  # Choose whether new Smaccers and existing ones without explicit instruction should spin
   # This can be false or a float as a speed setting
   spin: false
   # This is the default cooldown time (in seconds) that new or unset Smaccers will have

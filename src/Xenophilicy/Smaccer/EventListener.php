@@ -205,7 +205,7 @@ class EventListener implements Listener {
             if(substr($entity->getSaveId(), 0, 7) !== "Smaccer") continue;
             if($entity->namedtag->hasTag(SmaccerEntity::TAG_SPIN)) continue;
             if($entity->namedtag->hasTag(SmaccerEntity::TAG_ROTATE)){
-                if($entity->namedtag->getByte(SmaccerEntity::TAG_ROTATE) === 0) continue;
+                if($entity->namedtag->getByte(SmaccerEntity::TAG_ROTATE) === 0 && !Smaccer::addonEnabled("SlapperCooldown")) continue;
             }
             if(in_array($entity->getSaveId(), ["SmaccerFallingSand", "SmaccerMinecart", "SmaccerBoat", "SmaccerPrimedTNT", "SmaccerShulker"])) continue;
             $xdiff = $player->x - $entity->x;
