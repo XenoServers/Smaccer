@@ -167,7 +167,6 @@ class EventListener implements Listener {
             return;
         }
         if($entity instanceof SmaccerEntity || $entity instanceof SmaccerHuman){
-            $entity->namedtag->setByte(SmaccerEntity::TAG_ROTATE, 0);
             $clearLagg = Smaccer::getInstance()->getServer()->getPluginManager()->getPlugin("ClearLagg");
             if($clearLagg !== null){
                 /** @noinspection PhpUndefinedMethodInspection */
