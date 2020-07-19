@@ -144,7 +144,7 @@ class EventListener implements Listener {
             $nbt->setShort("Health", 1);
             $cmds = $oldnbt->getCompoundTag(SmaccerEntity::TAG_COMMAND);
             $nbt->setTag($cmds);
-            $nbt->setByte(SmaccerEntity::TAG_ROTATE, 1);
+            $nbt->setByte(SmaccerEntity::TAG_ROTATE, 0);
             $nbt->setString("MenuName", "");
             $nbt->setString(SmaccerEntity::TAG_NAME, $name);
             $nbt->setString("CustomName", $name);
@@ -167,6 +167,7 @@ class EventListener implements Listener {
             return;
         }
         if($entity instanceof SmaccerEntity || $entity instanceof SmaccerHuman){
+            $entity->namedtag->setByte(SmaccerEntity::TAG_ROTATE, 0);
             $clearLagg = Smaccer::getInstance()->getServer()->getPluginManager()->getPlugin("ClearLagg");
             if($clearLagg !== null){
                 /** @noinspection PhpUndefinedMethodInspection */
@@ -205,8 +206,8 @@ class EventListener implements Listener {
             if(substr($entity->getSaveId(), 0, 7) !== "Smaccer") continue;
             if($entity->namedtag->hasTag(SmaccerEntity::TAG_SPIN)) continue;
             if($entity->namedtag->hasTag(SmaccerEntity::TAG_ROTATE)){
-                if($entity->namedtag->getByte(SmaccerEntity::TAG_ROTATE) === 0 && !Smaccer::addonEnabled("SlapperCooldown")) continue;
-            }
+                if($entity->namedtag->getByte(SmaccerEntity::TAG_ROTATE) === 0 && !Smaccer::addonEnabled("SlapperRotation")) continue;
+            }elseif(!Smaccer::addonEnabled("SlapperRotation")) continue;
             if(in_array($entity->getSaveId(), ["SmaccerFallingSand", "SmaccerMinecart", "SmaccerBoat", "SmaccerPrimedTNT", "SmaccerShulker"])) continue;
             $xdiff = $player->x - $entity->x;
             $zdiff = $player->z - $entity->z;

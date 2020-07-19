@@ -148,7 +148,7 @@ class Smaccer extends PluginBase implements Listener {
             $entity->setNameTagVisible();
             if(!$entity instanceof SmaccerHuman) continue;
             $smaccerInv = $cacheObject->compoundTag->getCompoundTag("SmaccerData");
-            if(!$smaccerInv === null) continue;
+            if($smaccerInv === null) continue;
             if($smaccerInv->hasTag("Armor", ListTag::class)){
                 $humanArmour = $entity->getArmorInventory();
                 /** @var CompoundTag $itemTag */
