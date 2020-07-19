@@ -237,52 +237,14 @@ class EditSmaccer extends SubSmaccer {
             case "addc":
             case "addcmd":
             case "addcommand":
-                if(!isset($args[0])){
-                    $sender->sendMessage(Smaccer::PREFIX . TF::RED . "Enter a command");
-                    return false;
-                }
-                $input = trim(implode(" ", $args));
-                $commands = $entity->namedtag->getCompoundTag(SmaccerEntity::TAG_COMMAND) ?? new CompoundTag(SmaccerEntity::TAG_COMMAND);
-                if($commands->hasTag($input)){
-                    $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That command has already been added");
-                    return false;
-                }
-                $commands->setString($input, $input);
-                $entity->namedtag->setTag($commands);
-                $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "Command added");
-                return true;
             case "delc":
             case "delcmd":
             case "delcommand":
             case "removecommand":
-                if(!isset($args[0])){
-                    $sender->sendMessage(Smaccer::PREFIX . TF::RED . "Enter a command");
-                    return false;
-                }
-                $input = trim(implode(" ", $args));
-                $commands = $entity->namedtag->getCompoundTag(SmaccerEntity::TAG_COMMAND) ?? new CompoundTag(SmaccerEntity::TAG_COMMAND);
-                if(!$commands->hasTag($input)){
-                    $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That command doesn't exist");
-                    return false;
-                }
-                $commands->removeTag($input);
-                $entity->namedtag->setTag($commands);
-                $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "Command removed");
-                return true;
             case "listcommands":
             case "listcmds":
-            case "listcs":
-                $commands = $entity->namedtag->getCompoundTag(SmaccerEntity::TAG_COMMAND);
-                if($commands === null || $commands->getCount() === 0){
-                    $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That entity doesn't have any commands");
-                    return false;
-                }
-                $id = 0;
-                foreach($commands as $command){
-                    $id++;
-                    $sender->sendMessage(Smaccer::PREFIX . TF::YELLOW . "[" . TF::LIGHT_PURPLE . $id . TF::YELLOW . "] " . TF::GREEN . $command->getValue());
-                }
-                return true;
+                $sender->sendMessage(Smaccer::PREFIX . TF::RED . "This command is deprecated, please use the new syntax: " . TF::AQUA . "/smaccer edit <eid> cmd");
+                return false;
             case "block":
             case "tile":
             case "blockid":
@@ -338,6 +300,41 @@ class EditSmaccer extends SubSmaccer {
                 $entity->sendData($entity->getViewers());
                 $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "Updated scale");
                 return true;
+            case "slap":
+            case "slapback":
+            case "smack":
+            case "swing":
+            case "hit":
+                $slap = array_shift($args);
+                if(in_array($slap, ["off", "false", false, "no", "remove", "none", "disable"])){
+                    $entity->namedtag->setByte(SmaccerEntity::TAG_SLAP, 0);
+                    $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "SlapBack disabled");
+                    return true;
+                }elseif(in_array($slap, ["on", "true", true, "yes", "enable"])){
+                    $entity->namedtag->setByte(SmaccerEntity::TAG_SLAP, 1);
+                    $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "SlapBack enabled");
+                    return true;
+                }else{
+                    $sender->sendMessage(Smaccer::PREFIX . TF::RED . "Usage: /smaccer edit <eid> slap <on|off>");
+                    return false;
+                }
+            case "delay":
+            case "cool":
+            case "cooldown":
+                $delay = array_shift($args) ?? Smaccer::$settings["Default"]["cooldown"];
+                $remove = ["remove", "", "disable", "off", "none"];
+                if(in_array($delay, $remove)){
+                    $entity->namedtag->removeTag(SmaccerEntity::TAG_COOLDOWN);
+                    $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "Removed cooldown");
+                    return true;
+                }
+                if(!is_numeric($delay)){
+                    $sender->sendMessage(Smaccer::PREFIX . TF::RED . "Cooldown delay must be numeric");
+                    return false;
+                }
+                $entity->namedtag->setFloat(SmaccerEntity::TAG_COOLDOWN, (float)$delay);
+                $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "Updated cooldown delay");
+                return true;
             case "spin":
             case "speed":
             case "rotate":
@@ -369,6 +366,74 @@ class EditSmaccer extends SubSmaccer {
                 }else{
                     $sender->sendMessage(Smaccer::PREFIX . TF::RED . "Usage: /smaccer edit <eid> follow <on|off>");
                     return false;
+                }
+            case "cmd":
+            case "cmds":
+            case "command":
+            case "commands":
+                $mode = array_shift($args);
+                switch($mode){
+                    case "add":
+                    case "new":
+                        if(!isset($args[0])){
+                            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "Enter a command");
+                            return false;
+                        }
+                        $input = trim(implode(" ", $args));
+                        $commands = $entity->namedtag->getCompoundTag(SmaccerEntity::TAG_COMMAND) ?? new CompoundTag(SmaccerEntity::TAG_COMMAND);
+                        if($commands->hasTag($input)){
+                            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That command has already been added");
+                            return false;
+                        }
+                        $commands->setString($input, $input);
+                        $entity->namedtag->setTag($commands);
+                        $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "Command added");
+                        return true;
+                    case "del":
+                    case "delete":
+                    case "rem":
+                    case "remove":
+                        if(!isset($args[0])){
+                            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "Enter a command");
+                            return false;
+                        }
+                        $input = trim(implode(" ", $args));
+                        $commands = $entity->namedtag->getCompoundTag(SmaccerEntity::TAG_COMMAND) ?? new CompoundTag(SmaccerEntity::TAG_COMMAND);
+                        if(!$commands->hasTag($input)){
+                            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That command doesn't exist");
+                            return false;
+                        }
+                        $commands->removeTag($input);
+                        $entity->namedtag->setTag($commands);
+                        $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "Command removed");
+                        return true;
+                    case "list":
+                    case "show":
+                        $commands = $entity->namedtag->getCompoundTag(SmaccerEntity::TAG_COMMAND);
+                        if($commands === null || $commands->getCount() === 0){
+                            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That entity doesn't have any commands");
+                            return false;
+                        }
+                        $id = 0;
+                        foreach($commands as $command){
+                            $id++;
+                            $sender->sendMessage(Smaccer::PREFIX . TF::YELLOW . "[" . TF::LIGHT_PURPLE . $id . TF::YELLOW . "] " . TF::GREEN . $command->getValue());
+                        }
+                        return true;
+                    case "clear":
+                    case "delall":
+                    case "reset":
+                        if($entity->namedtag->hasTag(SmaccerEntity::TAG_COMMAND)){
+                            $entity->namedtag->removeTag(SmaccerEntity::TAG_COMMAND);
+                            $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "All commands removed");
+                            return true;
+                        }else{
+                            $sender->sendMessage(Smaccer::PREFIX . TF::RED . "That entity doesn't have any commands");
+                            return false;
+                        }
+                    default:
+                        $sender->sendMessage(Smaccer::PREFIX . TF::RED . "Usage: /smaccer edit <eid> cmd <add <name>|remove <name>|list|clear>");
+                        return false;
                 }
             case "world":
             case "worlds":

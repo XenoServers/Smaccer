@@ -36,9 +36,6 @@ class HelpSmaccer extends SubSmaccer {
             $sender->sendMessage(self::STAR . "hand: /smaccer edit <eid> boots [id[:meta]]");
             $sender->sendMessage(self::STAR . "skin: /smaccer edit <eid> skin");
             $sender->sendMessage(self::STAR . "name: /smaccer edit <eid> name <name|remove>");
-            $sender->sendMessage(self::STAR . "addcommand: /smaccer edit <eid> addcommand <command>");
-            $sender->sendMessage(self::STAR . "delcommand: /smaccer edit <eid> delcommand <command>");
-            $sender->sendMessage(self::STAR . "listcommands: /smaccer edit <eid> listcommands");
             $sender->sendMessage(self::STAR . "blockid: /smaccer edit <eid> block <id[:meta]>");
             $sender->sendMessage(self::STAR . "scale: /smaccer edit <eid> scale <size>");
             $sender->sendMessage(self::STAR . "tphere: /smaccer edit <eid> tphere");
@@ -46,6 +43,9 @@ class HelpSmaccer extends SubSmaccer {
             $sender->sendMessage(self::STAR . "menuname: /smaccer edit <eid> menuname <name|remove>");
             $sender->sendMessage(self::STAR . "spin: /smaccer edit <eid> spin <speed|remove>");
             $sender->sendMessage(self::STAR . "follow: /smaccer edit <eid> follow <on|off>");
+            $sender->sendMessage(self::STAR . "slapback: /smaccer edit <eid> slap <on|off>");
+            $sender->sendMessage(self::STAR . "cooldown: /smaccer edit <eid> cooldown <set <seconds>|remove>");
+            $sender->sendMessage(self::STAR . "commands: /smaccer edit <eid> cmd <add <command>|remove <command>|list|clear>");
             $sender->sendMessage(self::STAR . "worlds: /smaccer edit <eid> worlds <add <name>|remove <name>|list|clear>");
             $sender->sendMessage(self::STAR . "servers: /smaccer edit <eid> servers <add <ip> [port]|remove <ip> [port]|list|clear>");
         }else{

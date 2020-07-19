@@ -37,7 +37,7 @@ use Xenophilicy\Smaccer\tasks\SpinEntityTask;
  */
 class Smaccer extends PluginBase implements Listener {
     
-    public const CONFIG_VERSION = "1.3.0";
+    public const CONFIG_VERSION = "1.4.0";
     
     public const PREFIX = TF::YELLOW . "[" . TF::GREEN . "Smaccer" . TF::YELLOW . "] ";
     /** @var array */

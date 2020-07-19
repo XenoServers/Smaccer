@@ -46,9 +46,12 @@ class EventListener implements Listener {
      * @param SmaccerHitEvent $event
      */
     public function onSmaccerHit(SmaccerHitEvent $event){
+        $name = $event->getDamager()->getName();
+        if(isset(Smaccer::getInstance()->hitSessions[$name])) return;
+        $entity = $event->getEntity();
         if(Smaccer::addonEnabled("SlapBack")){
-            $entity = $event->getEntity();
-            if($entity instanceof SmaccerHuman){
+            $slap = $entity->namedtag->hasTag(SmaccerEntity::TAG_SLAP) ? $entity->namedtag->getByte(SmaccerEntity::TAG_SLAP) : $cooldown = Smaccer::$settings["Default"]["slap"];
+            if(($slap === true || $slap === 1) && $entity instanceof SmaccerHuman){
                 $pk = new AnimatePacket();
                 $pk->entityRuntimeId = $entity->getId();
                 $pk->action = AnimatePacket::ACTION_SWING_ARM;
@@ -56,12 +59,12 @@ class EventListener implements Listener {
             }
         }
         if(Smaccer::addonEnabled("SlapperCooldown")){
-            $name = $event->getDamager()->getName();
             if(!isset(Smaccer::getInstance()->lastHit[$name])){
                 Smaccer::getInstance()->lastHit[$name] = microtime(true);
                 return;
             }
-            if((Smaccer::getInstance()->lastHit[$name] + Smaccer::$settings["SlapperCooldown"]["delay"]) > microtime(true)){
+            $cooldown = $entity->namedtag->hasTag(SmaccerEntity::TAG_COOLDOWN) ? $entity->namedtag->getFloat(SmaccerEntity::TAG_COOLDOWN) : $cooldown = Smaccer::$settings["Default"]["cooldown"];
+            if(($cooldown + Smaccer::getInstance()->lastHit[$name]) > microtime(true)){
                 $event->setCancelled();
                 $event->getDamager()->sendTip(Smaccer::$settings["SlapperCooldown"]["message"]);
             }else{
@@ -90,40 +93,33 @@ class EventListener implements Listener {
      */
     public function onEntityDamage(EntityDamageEvent $event): void{
         $entity = $event->getEntity();
-        if($entity instanceof SmaccerEntity || $entity instanceof SmaccerHuman){
-            $event->setCancelled(true);
-            if(!$event instanceof EntityDamageByEntityEvent){
-                return;
+        if(!$entity instanceof SmaccerEntity && !$entity instanceof SmaccerHuman) return;
+        $event->setCancelled(true);
+        if(!$event instanceof EntityDamageByEntityEvent) return;
+        $damager = $event->getDamager();
+        if(!$damager instanceof Player) return;
+        $event = new SmaccerHitEvent($entity, $damager);
+        $event->call();
+        if($event->isCancelled()) return;
+        $damagerName = $damager->getName();
+        if(isset(Smaccer::getInstance()->hitSessions[$damagerName])){
+            if($entity instanceof SmaccerHuman){
+                $entity->getInventory()->clearAll();
             }
-            $damager = $event->getDamager();
-            if(!$damager instanceof Player){
-                return;
-            }
-            $event = new SmaccerHitEvent($entity, $damager);
-            $event->call();
-            if($event->isCancelled()){
-                return;
-            }
-            $damagerName = $damager->getName();
-            if(isset(Smaccer::getInstance()->hitSessions[$damagerName])){
-                if($entity instanceof SmaccerHuman){
-                    $entity->getInventory()->clearAll();
-                }
-                $entity->close();
-                unset(Smaccer::getInstance()->hitSessions[$damagerName]);
-                $damager->sendMessage(Smaccer::PREFIX . TF::GREEN . "Entity removed");
-                return;
-            }
-            if(isset(Smaccer::getInstance()->idSessions[$damagerName])){
-                $damager->sendMessage(Smaccer::PREFIX . TF::GREEN . "Entity ID: " . $entity->getId());
-                unset(Smaccer::getInstance()->idSessions[$damagerName]);
-                return;
-            }
-            if(($commands = $entity->namedtag->getCompoundTag(SmaccerEntity::TAG_COMMAND)) !== null){
-                $server = Smaccer::getInstance()->getServer();
-                foreach($commands as $stringTag){
-                    $server->dispatchCommand(new ConsoleCommandSender(), str_replace("{player}", '"' . $damagerName . '"', $stringTag->getValue()));
-                }
+            $entity->close();
+            unset(Smaccer::getInstance()->hitSessions[$damagerName]);
+            $damager->sendMessage(Smaccer::PREFIX . TF::GREEN . "Entity removed");
+            return;
+        }
+        if(isset(Smaccer::getInstance()->idSessions[$damagerName])){
+            $damager->sendMessage(Smaccer::PREFIX . TF::GREEN . "Entity ID: " . $entity->getId());
+            unset(Smaccer::getInstance()->idSessions[$damagerName]);
+            return;
+        }
+        if(($commands = $entity->namedtag->getCompoundTag(SmaccerEntity::TAG_COMMAND)) !== null){
+            $server = Smaccer::getInstance()->getServer();
+            foreach($commands as $stringTag){
+                $server->dispatchCommand(new ConsoleCommandSender(), str_replace("{player}", '"' . $damagerName . '"', $stringTag->getValue()));
             }
         }
     }
