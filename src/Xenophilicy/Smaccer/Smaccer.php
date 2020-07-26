@@ -144,8 +144,6 @@ class Smaccer extends PluginBase implements Listener {
             $nbt->setString(SmaccerEntity::TAG_NAME, $name);
             $entity = Entity::createEntity($cacheObject->type, $level, $nbt);
             $entity->setNameTag($name);
-            $entity->setNameTagAlwaysVisible();
-            $entity->setNameTagVisible();
             if(!$entity instanceof SmaccerHuman) continue;
             $smaccerInv = $cacheObject->compoundTag->getCompoundTag("SmaccerData");
             if($smaccerInv === null) continue;

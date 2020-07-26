@@ -321,12 +321,17 @@ class EditSmaccer extends SubSmaccer {
             case "delay":
             case "cool":
             case "cooldown":
-                $delay = array_shift($args) ?? Smaccer::$settings["Default"]["cooldown"];
+                $mode = array_shift($args);
                 $remove = ["remove", "", "disable", "off", "none"];
-                if(in_array($delay, $remove)){
+                if(in_array($mode, $remove)){
                     $entity->namedtag->removeTag(SmaccerEntity::TAG_COOLDOWN);
                     $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "Removed cooldown");
                     return true;
+                }elseif($mode === "set"){
+                    $delay = array_shift($args) ?? Smaccer::$settings["Default"]["cooldown"];
+                }else{
+                    $sender->sendMessage(Smaccer::PREFIX . TF::RED . "Usage: /smaccer edit <eid> cooldown <set <seconds>|remove>");
+                    return false;
                 }
                 if(!is_numeric($delay)){
                     $sender->sendMessage(Smaccer::PREFIX . TF::RED . "Cooldown delay must be numeric");
