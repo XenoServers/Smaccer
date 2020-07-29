@@ -60,16 +60,16 @@ class EventListener implements Listener {
             }
         }
         if(Smaccer::addonEnabled("SlapperCooldown")){
-            if(!isset(Smaccer::getInstance()->lastHit[$name])){
-                Smaccer::getInstance()->lastHit[$name] = microtime(true);
+            if(!isset(Smaccer::getInstance()->lastHit[$name][$entity->getId()])){
+                Smaccer::getInstance()->lastHit[$name][$entity->getId()] = microtime(true);
                 return;
             }
             $cooldown = $entity->namedtag->hasTag(SmaccerEntity::TAG_COOLDOWN) ? $entity->namedtag->getFloat(SmaccerEntity::TAG_COOLDOWN) : $cooldown = Smaccer::$settings["Default"]["cooldown"];
-            if(($cooldown + Smaccer::getInstance()->lastHit[$name]) > microtime(true)){
+            if(($cooldown + Smaccer::getInstance()->lastHit[$name][$entity->getId()]) > microtime(true)){
                 $event->setCancelled();
                 $event->getDamager()->sendTip(Smaccer::$settings["SlapperCooldown"]["message"]);
             }else{
-                Smaccer::getInstance()->lastHit[$name] = microtime(true);
+                Smaccer::getInstance()->lastHit[$name][$entity->getId()] = microtime(true);
             }
         }
     }
