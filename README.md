@@ -1,5 +1,5 @@
 # Smaccer
-A massive combination of [Slapper](https://github.com/jojoe77777/Slapper) and all its add-on plugins
+A massive combination of [Slapper](https://github.com/jojoe77777/Slapper) and all its add-on plugins with new added features!
 
 ### Implemented Addons
 - [X] [SlapBack](https://github.com/jojoe77777/SlapBack)

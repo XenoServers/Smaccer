@@ -48,7 +48,7 @@ class RemoveSmaccer extends SubSmaccer {
         }
         $event = new SmaccerDeletionEvent($entity);
         $event->call();
-        $entity->close();
+        $entity->flagForDespawn();
         $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "Entity removed");
         return true;
     }

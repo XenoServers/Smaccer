@@ -13,7 +13,6 @@ use pocketmine\nbt\tag\ListTag;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat as TF;
-use Xenophilicy\Smaccer\cache\CacheHandlerV1;
 use Xenophilicy\Smaccer\cache\CacheHandlerV2;
 use Xenophilicy\Smaccer\commands\BaseSmaccer;
 use Xenophilicy\Smaccer\commands\CancelSmaccer;
@@ -56,8 +55,6 @@ class Smaccer extends PluginBase implements Listener {
     public $editingId = [];
     /** @var CacheHandlerV2 */
     public $cacheHandler;
-    /** @var CacheHandlerV1 */
-    public $legacyCacheHandler;
     
     public static function getInstance(): self{
         return self::$instance;
@@ -98,14 +95,6 @@ class Smaccer extends PluginBase implements Listener {
     public function enableAddons(){
         if(self::addonEnabled("SlapperCache")){
             $this->cacheHandler = new CacheHandlerV2();
-            $legacyCacheHandler = new CacheHandlerV1();
-            if($legacyCacheHandler->isValid()){
-                foreach($legacyCacheHandler->uncacheSmaccers() as $cacheObject){
-                    $this->cacheHandler->storeSmaccerNbt($cacheObject->name, $cacheObject->type, $cacheObject->level, $cacheObject->compoundTag);
-                }
-                $this->cacheHandler->setNeedsRestore($legacyCacheHandler->needsRestore());
-                $legacyCacheHandler->nuke();
-            }
             $this->checkForSmaccerRestore();
             $this->getLogger()->info("Enabled SlapperCache");
         }

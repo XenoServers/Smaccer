@@ -38,7 +38,7 @@ class UpdateCountTagTask extends Task {
                     $format = Smaccer::$settings["Default"]["count-tags"]["servers"];
                     $nametag = str_replace(["{players}", "{maximum}"], [$online, $maximum], $format);
                     $entity->setNameTag($entity->namedtag->getString(SmaccerEntity::TAG_NAME) . TF::EOL . $nametag);
-                    return;
+                    continue;
                 }
                 if($entity->namedtag->hasTag(SmaccerEntity::TAG_WORLD)){
                     $online = 0;
@@ -51,7 +51,7 @@ class UpdateCountTagTask extends Task {
                     $format = Smaccer::$settings["Default"]["count-tags"]["worlds"];
                     $nametag = str_replace("{players}", $online, $format);
                     $entity->setNameTag($entity->namedtag->getString(SmaccerEntity::TAG_NAME) . TF::EOL . $nametag);
-                    return;
+                    continue;
                 }
                 $entity->setNameTag($entity->namedtag->getString(SmaccerEntity::TAG_NAME, ""));
             }

@@ -107,7 +107,7 @@ class EventListener implements Listener {
             if($entity instanceof SmaccerHuman){
                 $entity->getInventory()->clearAll();
             }
-            $entity->close();
+            $entity->flagForDespawn();
             unset(Smaccer::getInstance()->hitSessions[$damagerName]);
             $damager->sendMessage(Smaccer::PREFIX . TF::GREEN . "Entity removed");
             return;
