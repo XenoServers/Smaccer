@@ -1,4 +1,4 @@
-# Smaccer
+# Smaccer [![HitCount](http://hits.xenoservers.net:4000/Xenophilicy/Smaccer.svg)](http://hits.xenoservers.net:4000/)
 A massive combination of [Slapper](https://github.com/jojoe77777/Slapper) and all its add-on plugins with new added features!
 
 ### Implemented Addons
