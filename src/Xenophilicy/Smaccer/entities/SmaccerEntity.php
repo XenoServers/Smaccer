@@ -74,6 +74,10 @@ class SmaccerEntity extends Entity {
         }
     }
     
+    public function entityBaseTick(int $tickDiff = 1): bool{
+        return $this->update();
+    }
+    
     public function broadcastMovement(bool $teleport = false): void{
         if($this->chunk !== null){
             parent::broadcastMovement($teleport);

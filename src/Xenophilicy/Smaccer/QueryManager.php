@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Xenophilicy\Smaccer;
 
 use Xenophilicy\Smaccer\tasks\QueryTaskCaller;
-use Xenophilicy\Smaccer\tasks\UpdateCountTagTask;
 
 /**
  * Class QueryManager
@@ -13,10 +12,6 @@ use Xenophilicy\Smaccer\tasks\UpdateCountTagTask;
 class QueryManager {
     
     private static $results = [];
-    
-    public static function init(){
-        Smaccer::getInstance()->getScheduler()->scheduleRepeatingTask(new UpdateCountTagTask(), 5);
-    }
     
     /**
      * @param string $server

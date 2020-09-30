@@ -211,7 +211,6 @@ class EditSmaccer extends SubSmaccer {
                 $remove = ["remove", "", "disable", "off", "hide", "none"];
                 if(in_array($name, $remove)) $name = "";
                 $entity->namedtag->setString(SmaccerEntity::TAG_NAME, $name);
-                $entity->setNameTag($name);
                 $entity->sendData($entity->getViewers());
                 $sender->sendMessage(Smaccer::PREFIX . TF::GREEN . "Name updated");
                 return true;

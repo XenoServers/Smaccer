@@ -28,7 +28,6 @@ use Xenophilicy\Smaccer\entities\SmaccerEntity;
 use Xenophilicy\Smaccer\entities\SmaccerHuman;
 use Xenophilicy\Smaccer\events\SmaccerCreationEvent;
 use Xenophilicy\Smaccer\tasks\CheckSlapperPluginTask;
-use Xenophilicy\Smaccer\tasks\SpinEntityTask;
 
 /**
  * Class Smaccer
@@ -77,7 +76,6 @@ class Smaccer extends PluginBase implements Listener {
         }
         $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
         EntityManager::init();
-        QueryManager::init();
         $this->enableAddons();
         $cmd = new BaseSmaccer();
         $this->getServer()->getCommandMap()->register("smaccer", $cmd);
@@ -88,7 +86,6 @@ class Smaccer extends PluginBase implements Listener {
         $cmd->registerSubSmaccer("remove", new RemoveSmaccer(), ["delete", "rm", "del"]);
         $cmd->registerSubSmaccer("cancel", new CancelSmaccer(), ["stopremove", "stopid", "stop"]);
         $cmd->registerSubSmaccer("spawn", new SpawnSmaccer(), ["add", "make", "create", "spawn", "apawn", "spanw", "new"]);
-        $this->getScheduler()->scheduleRepeatingTask(new SpinEntityTask(), 1);
         $this->getServer()->getCommandMap()->register("runcommandas", new RunCommandAs());
     }
     

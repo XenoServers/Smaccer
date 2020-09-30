@@ -32,6 +32,10 @@ class SmaccerHuman extends Human {
         $this->saveSmaccerNbt();
     }
     
+    public function entityBaseTick(int $tickDiff = 1): bool{
+        return $this->update();
+    }
+    
     public function sendNameTag(Player $player): void{
         $pk = new SetEntityDataPacket();
         $pk->entityRuntimeId = $this->getId();
@@ -41,7 +45,6 @@ class SmaccerHuman extends Human {
     
     protected function sendSpawnPacket(Player $player): void{
         parent::sendSpawnPacket($player);
-        
         if(($menuName = $this->namedtag->getString("MenuName", "", true)) !== ""){
             $player->getServer()->updatePlayerListData($this->getUniqueId(), $this->getId(), $menuName, $this->skin, "", [$player]);
         }
