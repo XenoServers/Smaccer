@@ -1,10 +1,10 @@
 name: Smaccer
 author: Xenophilicy
-version: 2.2.5
+version: 2.2.6
 description: A massive combination of Slapper and all its add-on plugins
 main: Xenophilicy\Smaccer\Smaccer
 api: 3.15.0
-mcpe-protocol: [ 408 , 419 ]
+mcpe-protocol: [ 408 , 419, 422 ]
 
 permissions:
   smaccer:
