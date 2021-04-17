@@ -4,8 +4,7 @@ declare(strict_types=1);
 namespace Xenophilicy\Smaccer\entities;
 
 use pocketmine\entity\Entity;
-use pocketmine\item\ItemFactory;
-use pocketmine\item\ItemIds;
+use pocketmine\item\Item;
 use pocketmine\level\Level;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\mcpe\protocol\AddActorPacket as AddEntityPacket;
@@ -13,6 +12,7 @@ use pocketmine\network\mcpe\protocol\AddPlayerPacket;
 use pocketmine\network\mcpe\protocol\MoveActorAbsolutePacket as MoveEntityAbsolutePacket;
 use pocketmine\network\mcpe\protocol\RemoveActorPacket;
 use pocketmine\network\mcpe\protocol\SetActorDataPacket as SetEntityDataPacket;
+use pocketmine\network\mcpe\protocol\types\inventory\ItemStackWrapper;
 use pocketmine\Player;
 use pocketmine\utils\UUID;
 use Xenophilicy\Smaccer\SmaccerTrait;
@@ -100,11 +100,11 @@ class SmaccerEntity extends Entity {
         unset($pk->metadata[self::DATA_NAMETAG]);
         $player->dataPacket($pk);
         $pk2 = new AddPlayerPacket();
+        $pk2->item = ItemStackWrapper::legacy(Item::get(Item::AIR, 0, 0));
         $pk2->entityRuntimeId = $this->tagId;
         $pk2->uuid = UUID::fromRandom();
         $pk2->username = $this->getDisplayName($player);
         $pk2->position = $this->asVector3()->add(0, static::HEIGHT);
-        $pk2->item = ItemFactory::get(ItemIds::AIR);
         $pk2->metadata = [self::DATA_SCALE => [self::DATA_TYPE_FLOAT, 0.0]];
         $player->dataPacket($pk2);
     }
