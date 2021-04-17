@@ -1,4 +1,4 @@
-# Smaccer [![HitCount](http://hits.xenoservers.net:4000/Xenophilicy/Smaccer.svg)](http://hits.xenoservers.net:4000/)
+# Smaccer
 
 A massive combination of [Slapper](https://github.com/jojoe77777/Slapper) and all its add-on plugins with new added features!
 
@@ -29,5 +29,5 @@ A massive combination of [Slapper](https://github.com/jojoe77777/Slapper) and al
 
 ### Usage notes
 
-* This plugin is designed for [PocketMine-MP](https://github.com/pmmp/PocketMine-MP) ONLY. Support for any variations, forks, or spoons will NOT be provided.
+* This plugin is designed for [PocketMine-MP](https://github.com/pmmp/PocketMine-MP). Support isn't provided for this plugin anymore, but releases are still being submitted when I feel like pushing updates.
 * Smaccer is a REPLACEMENT for Slapper and should NOT be used alongside it. **Please UNINSTALL Slapper and all of its addons before attempting to use this plugin.**
