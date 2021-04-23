@@ -51,7 +51,7 @@ class EventListener implements Listener {
         if(isset(Smaccer::getInstance()->hitSessions[$name])) return;
         $entity = $event->getEntity();
         if(Smaccer::addonEnabled("SlapBack")){
-            $slap = $entity->namedtag->hasTag(SmaccerEntity::TAG_SLAP) ? $entity->namedtag->getByte(SmaccerEntity::TAG_SLAP) : $cooldown = Smaccer::$settings["Default"]["slap"];
+            $slap = $entity->namedtag->hasTag(SmaccerEntity::TAG_SLAP) ? $entity->namedtag->getByte(SmaccerEntity::TAG_SLAP) : Smaccer::$settings["Default"]["slap"];
             if(($slap === true || $slap === 1) && $entity instanceof SmaccerHuman){
                 $pk = new AnimatePacket();
                 $pk->entityRuntimeId = $entity->getId();
@@ -64,7 +64,7 @@ class EventListener implements Listener {
                 Smaccer::getInstance()->lastHit[$name][$entity->getId()] = microtime(true);
                 return;
             }
-            $cooldown = $entity->namedtag->hasTag(SmaccerEntity::TAG_COOLDOWN) ? $entity->namedtag->getFloat(SmaccerEntity::TAG_COOLDOWN) : $cooldown = Smaccer::$settings["Default"]["cooldown"];
+            $cooldown = $entity->namedtag->hasTag(SmaccerEntity::TAG_COOLDOWN) ? $entity->namedtag->getFloat(SmaccerEntity::TAG_COOLDOWN) : Smaccer::$settings["Default"]["cooldown"];
             if(($cooldown + Smaccer::getInstance()->lastHit[$name][$entity->getId()]) > microtime(true)){
                 $event->setCancelled();
                 $event->getDamager()->sendTip(Smaccer::$settings["SlapperCooldown"]["message"]);
@@ -220,7 +220,7 @@ class EventListener implements Listener {
             if($entity->getSaveId() === "SmaccerHuman"){
                 $pk = new MovePlayerPacket();
                 $pk->entityRuntimeId = $entity->getId();
-                $pk->position = $entity->asVector3()->add(0, $entity->getEyeHeight(), 0);
+                $pk->position = $entity->asVector3()->add(0, $entity->getEyeHeight());
                 $pk->yaw = $yaw;
                 $pk->pitch = $pitch;
                 $pk->headYaw = $yaw;

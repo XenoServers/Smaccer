@@ -166,7 +166,7 @@ class Smaccer extends PluginBase implements Listener {
             $entity->getInventory()->setItemInHand($item);
             $entity->getInventory()->sendHeldItem($entity->getViewers());
         }
-        $player->sendMessage(self::PREFIX . TF::GREEN . "Created {$type} entity");
+        $player->sendMessage(self::PREFIX . TF::GREEN . "Created $type entity");
     }
     
     /**

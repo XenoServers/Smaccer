@@ -27,7 +27,7 @@ class QueryTask extends AsyncTask {
     }
     
     public function onRun(){
-        $queryServer = $this->sendQuery($this->host, (int)$this->port);
+        $queryServer = $this->sendQuery($this->host, $this->port);
         $status = $queryServer === null ? 'offline' : 'online';
         if($status == "online" && isset($queryServer[17])){
             $this->setResult([$queryServer[15], $queryServer[17]]);

@@ -26,7 +26,7 @@ class RunCommandAs extends PluginCommand {
      * @param CommandSender $sender
      * @param string $commandLabel
      * @param string[] $args
-     * @return mixed
+     * @return bool
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args){
         if(count($args) < 2){

@@ -26,7 +26,7 @@ class EditSmaccer extends SubSmaccer {
      * @param CommandSender $sender
      * @param string $commandLabel
      * @param array $args
-     * @return mixed
+     * @return bool
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args){
         if(!$sender->hasPermission("smaccer.edit")){
@@ -87,7 +87,7 @@ class EditSmaccer extends SubSmaccer {
                     $item = $sender->getArmorInventory()->getHelmet();
                 }else{
                     $data = explode(":", $item);
-                    $id = is_integer($data[0]) ? (int)$data[0] : Item::fromString((string)$data[0])->getId();
+                    $id = is_integer($data[0]) ? $data[0] : Item::fromString((string)$data[0])->getId();
                     $item = Item::get($id, (int)($data[1] ?? 0));
                 }
                 $entity->getArmorInventory()->setHelmet($item);
@@ -109,7 +109,7 @@ class EditSmaccer extends SubSmaccer {
                     $item = $sender->getArmorInventory()->getChestplate();
                 }else{
                     $data = explode(":", $item);
-                    $id = is_integer($data[0]) ? (int)$data[0] : Item::fromString((string)$data[0])->getId();
+                    $id = is_integer($data[0]) ? $data[0] : Item::fromString((string)$data[0])->getId();
                     $item = Item::get($id, (int)($data[1] ?? 0));
                 }
                 $entity->getArmorInventory()->setChestplate($item);
@@ -131,7 +131,7 @@ class EditSmaccer extends SubSmaccer {
                     $item = $sender->getArmorInventory()->getLeggings();
                 }else{
                     $data = explode(":", $item);
-                    $id = is_integer($data[0]) ? (int)$data[0] : Item::fromString((string)$data[0])->getId();
+                    $id = is_integer($data[0]) ? $data[0] : Item::fromString((string)$data[0])->getId();
                     $item = Item::get($id, (int)($data[1] ?? 0));
                 }
                 $entity->getArmorInventory()->setLeggings($item);
@@ -153,7 +153,7 @@ class EditSmaccer extends SubSmaccer {
                     $item = $sender->getArmorInventory()->getBoots();
                 }else{
                     $data = explode(":", $item);
-                    $id = is_integer($data[0]) ? (int)$data[0] : Item::fromString((string)$data[0])->getId();
+                    $id = is_integer($data[0]) ? $data[0] : Item::fromString((string)$data[0])->getId();
                     $item = Item::get($id, (int)($data[1] ?? 0));
                 }
                 $entity->getArmorInventory()->setBoots($item);
@@ -177,7 +177,7 @@ class EditSmaccer extends SubSmaccer {
                     $item = $sender->getInventory()->getItemInHand();
                 }else{
                     $data = explode(":", $item);
-                    $id = is_integer($data[0]) ? (int)$data[0] : Item::fromString((string)$data[0])->getId();
+                    $id = is_integer($data[0]) ? $data[0] : Item::fromString((string)$data[0])->getId();
                     $item = Item::get($id, (int)($data[1] ?? 0));
                 }
                 $entity->getInventory()->setItemInHand($item);
@@ -261,7 +261,7 @@ class EditSmaccer extends SubSmaccer {
                     $block = $sender->getInventory()->getItemInHand()->getBlock();
                 }else{
                     $data = explode(":", $block);
-                    $id = is_integer($data[0]) ? (int)$data[0] : Item::fromString((string)$data[0])->getBlock()->getId();
+                    $id = is_integer($data[0]) ? $data[0] : Item::fromString((string)$data[0])->getBlock()->getId();
                     $block = Item::get($id, (int)($data[1] ?? 0))->getBlock();
                 }
                 $entity->getDataPropertyManager()->setInt(Entity::DATA_VARIANT, RuntimeBlockMapping::toStaticRuntimeId($block->getId(), $block->getDamage()));

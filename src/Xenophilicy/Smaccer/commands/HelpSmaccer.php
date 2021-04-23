@@ -19,7 +19,7 @@ class HelpSmaccer extends SubSmaccer {
      * @param CommandSender $sender
      * @param string $commandLabel
      * @param array $args
-     * @return mixed
+     * @return bool
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args){
         if(!$sender->hasPermission("smaccer.help")){

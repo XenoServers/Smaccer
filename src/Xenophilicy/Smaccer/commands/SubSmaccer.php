@@ -13,7 +13,7 @@ abstract class SubSmaccer {
     
     /**
      * @param CommandSender $sender
-     * @param $commandLabel
+     * @param string $commandLabel
      * @param array $args
      * @return mixed
      */

@@ -51,7 +51,7 @@ trait SmaccerTrait {
                 $online += sizeof($level->getPlayers());
             }
             $format = Smaccer::$settings["Default"]["count-tags"]["worlds"];
-            $nametag = str_replace("{players}", $online, $format);
+            $nametag = str_replace("{players}", "$online", $format);
             $this->setNameTag($this->namedtag->getString(SmaccerEntity::TAG_NAME) . TF::EOL . $nametag);
             $this->sendData($this->getViewers());
             return true;
@@ -88,7 +88,7 @@ trait SmaccerTrait {
     abstract public function sendNameTag(Player $player): void;
     
     public function prepareMetadata(): void{
-        $this->setGenericFlag(Entity::DATA_FLAG_IMMOBILE, true);
+        $this->setGenericFlag(Entity::DATA_FLAG_IMMOBILE);
         if(!$this->namedtag->hasTag(SmaccerEntity::TAG_SCALE, FloatTag::class)){
             $this->namedtag->setFloat(SmaccerEntity::TAG_SCALE, 1.0, true);
         }

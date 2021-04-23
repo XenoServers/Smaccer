@@ -33,7 +33,7 @@ class SmaccerPlus extends PluginCommand {
      * @param CommandSender $sender
      * @param string $commandLabel
      * @param string[] $args
-     * @return mixed
+     * @return bool
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args){
         if(!$sender->hasPermission("smaccer.plus")){
@@ -169,7 +169,7 @@ class SmaccerPlus extends PluginCommand {
      * @param string $name
      * @return string
      */
-    private function shortenName(string $name){
+    private function shortenName(string $name): string{
         if(strlen($name) > 16){
             return substr($name, 0, 16) . "...";
         }
